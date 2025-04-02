@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import { BrowserRouter, useRoutes } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
 import routes from './routes'
 
 // AppRoutes component to use the useRoutes hook
@@ -11,9 +12,11 @@ function AppRoutes() {
 function App() {
   return (
     <Box width="full">
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
     </Box>
   )
 }

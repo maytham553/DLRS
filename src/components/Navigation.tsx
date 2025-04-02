@@ -1,6 +1,7 @@
 import { Box, Flex, Text, HStack, Button, useDisclosure } from '@chakra-ui/react'
 import { Link, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { useAuth } from '../context/AuthContext'
 
 // Simple hamburger menu icon component
 const HamburgerIcon = () => (
@@ -15,6 +16,8 @@ export default function Navigation() {
     const { open, onOpen, onClose } = useDisclosure()
     const location = useLocation()
     const [scrolled, setScrolled] = useState(false)
+    const { user, logout } = useAuth()
+    const [isLoggingOut, setIsLoggingOut] = useState(false)
 
     // Handle scroll effect for the navigation bar
     useEffect(() => {
@@ -33,12 +36,36 @@ export default function Navigation() {
     // Determine if a link is active
     const isActive = (path: string) => location.pathname === path
 
-    // Navigation links
+    // Navigation links - conditionally add links based on authentication status
     const links = [
         { name: 'Home', path: '/' },
-        // { name: 'Dashboard', path: '/dashboard' },
-        // { name: 'Login', path: '/login' }
     ]
+
+    // Show login link if not authenticated, otherwise show dashboard
+    if (!user) {
+        links.push({ name: 'Login', path: '/login' })
+    } else {
+        links.push({ name: 'Dashboard', path: '/dashboard' })
+    }
+
+    const handleLogout = async () => {
+        try {
+            setIsLoggingOut(true)
+            await logout()
+            // Show success message
+            alert('Logged out successfully')
+        } catch (error) {
+            // Show error
+            alert('Error logging out')
+            console.error('Logout error:', error)
+        } finally {
+            setIsLoggingOut(false)
+            // Close mobile menu if open
+            if (open) {
+                onClose()
+            }
+        }
+    }
 
     // Styled navigation link
     const NavLink = ({ name, path }: { name: string, path: string }) => (
@@ -117,6 +144,22 @@ export default function Navigation() {
                     {links.map((link) => (
                         <NavLink key={link.path} name={link.name} path={link.path} />
                     ))}
+
+                    {/* Show logout button if user is authenticated */}
+                    {user && (
+                        <Button
+                            variant="outline"
+                            borderColor="brand.500"
+                            color="brand.500"
+                            _hover={{ bg: "brand.50" }}
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}
+                            size="md"
+                            ml={2}
+                        >
+                            {isLoggingOut ? 'Logging out...' : 'Logout'}
+                        </Button>
+                    )}
                 </HStack>
 
                 {/* Mobile Navigation Button */}
@@ -182,6 +225,22 @@ export default function Navigation() {
                                 </Flex>
                             </Link>
                         ))}
+
+                        {/* Show logout button in mobile menu if user is authenticated */}
+                        {user && (
+                            <Button
+                                mt={3}
+                                variant="outline"
+                                borderColor="brand.500"
+                                color="brand.500"
+                                _hover={{ bg: "brand.50" }}
+                                onClick={handleLogout}
+                                disabled={isLoggingOut}
+                                w="full"
+                            >
+                                {isLoggingOut ? 'Logging out...' : 'Logout'}
+                            </Button>
+                        )}
                     </Flex>
                 </Box>
             )}

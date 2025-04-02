@@ -42,6 +42,7 @@ it contains the following information:
   - residence country
 
 - IDP application information
+
   - duration
     - options: 1 year
     - options: 3 years
@@ -54,72 +55,14 @@ it contains the following information:
   - Expiry Date
   - IDP Number
 
-## Tasks
+  <!-- Firebase information -->
 
-- [ ] Setup the project
-
-  - create react project
-  - create repo
-  - create firebase project
-  - install libraries
-    - chakra ui
-    - react router
-    - react hook form
-    - firebase
-
-- [ ] Register IDP application
-
-- [x] Define all data models
-
-  - IDP
-
-    - Id (required, unique)
-    - status [valid, cancelled, expired] (default: valid , required)
-    - firstName (required)
-    - familyName (required)
-    - phoneNumber (optional)
-    - gender (required)
-    - birthDate (required)
-    - birthPlace (required)
-    - licenseNumber (required)
-    - licenseClass [A, B, C, D, E] (required)
-    - issuerCountry (required)
-    - addressLine1 (required)
-    - addressLine2 (optional)
-    - city (required)
-    - state (required)
-    - zipCode (required)
-    - country (required)
-    - residenceCountry (required)
-    - duration [1, 3] (required)
-    - requestIdCard (boolean) (required)
-    - personalPhoto (required)
-    - licenseFrontPhoto (required)
-    - licenseBackPhoto (required)
-    - termsAccepted (required)
-    - issueDate (required)
-    - expiryDate (required)
-    - idpNumber (required, format: nanoid yymmddxxxxxx , unique)
-
-  - Agent
-    - Id (required, unique)
-    - name (required)
-    - userName (required, unique)
-    - email (required, unique)
-    - password (required)
-
-- [ ] Public Search For IDP
-
-- [ ] Login/Logout
-
-- [ ] Edit IDP application
-
-- [ ] List For IDPs
-
-- [ ] Print IDP ID
-
-- [ ] Print IDP Card
-
-- [ ] Public Website (low priority)
-
-- [ ] Public IDP application (by customers) (low priority)
+<!-- const firebaseConfig = {
+  apiKey: "AIzaSyCBfX-4MVqZIdSgmSXeKPOQppzIYrEfl1Y",
+  authDomain: "dlrs-13af7.firebaseapp.com",
+  projectId: "dlrs-13af7",
+  storageBucket: "dlrs-13af7.firebasestorage.app",
+  messagingSenderId: "867838587828",
+  appId: "1:867838587828:web:f7b1dd5a03780053fe78e1",
+  measurementId: "G-TSFYMKJDJZ"
+}; -->
