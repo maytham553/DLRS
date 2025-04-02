@@ -1,0 +1,39 @@
+export type Duration = "1 year" | "3 years";
+export type Gender = "Male" | "Female";
+export type LicenseClass = "A" | "B" | "C" | "D" | "E";
+export type RequestIdCard = "Yes" | "No";
+
+export interface IDPFormData {
+  id: string;
+  name: string;
+  familyName: string;
+  phoneNumber: string;
+  gender: Gender;
+  birthDate: string;
+  birthPlace: string;
+  licenseNumber: string;
+  licenseClass: LicenseClass;
+  issuerCountry: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  residenceCountry: string;
+  duration: Duration;
+  requestIdCard: RequestIdCard;
+  personalPhoto: string;
+  licenseFrontPhoto: string;
+  licenseBackPhoto: string;
+}
+
+export interface IDPFormInput
+  extends Omit<
+    IDPFormData,
+    "personalPhoto" | "licenseFrontPhoto" | "licenseBackPhoto"
+  > {
+  personalPhoto: File | null;
+  licenseFrontPhoto: File | null;
+  licenseBackPhoto: File | null;
+}

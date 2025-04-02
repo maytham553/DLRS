@@ -16,7 +16,7 @@
 
 ## Authentication System 🔐
 
-- [ ] Login/Logout Agents using Firebase Authentication
+- [-] Login/Logout Agents using Firebase Authentication
 
 - [ ] Register IDP application
 
@@ -60,8 +60,6 @@
     - password (required)
 
 - [ ] Public Search For IDP
-
-- [ ] Login/Logout
 
 - [ ] Edit IDP application
 

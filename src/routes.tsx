@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import { IDPHome } from "./pages/IDP";
-
+import { IDPApplication } from "./pages/IDP/Application";
 const routes: RouteObject[] = [
     {
         path: "/",
@@ -27,6 +27,14 @@ const routes: RouteObject[] = [
         element: (
             <ProtectedRoute>
                 <IDPHome />
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: "/idp/application",
+        element: (
+            <ProtectedRoute>
+                <IDPApplication />
             </ProtectedRoute>
         ),
     },
