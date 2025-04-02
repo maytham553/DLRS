@@ -6,7 +6,7 @@ export default function Home() {
     const { user } = useAuth();
 
     return (
-        <div className="flex flex-col items-center justify-center text-center py-12 md:py-20">
+        <div className="flex flex-col items-center justify-center text-center py-12 md:py-20  h-full px-10">
             {/* Hero Section */}
             <div className="max-w-3xl mx-auto">
                 <div className="inline-block mb-6 px-4 py-1.5 bg-primary/10 rounded-full">
