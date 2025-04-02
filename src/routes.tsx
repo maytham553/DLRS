@@ -1,7 +1,6 @@
 import { RouteObject } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
 import Dashboard from './pages/Dashboard'
 
@@ -24,8 +23,8 @@ const routes: RouteObject[] = [
     },
     {
         path: '*',
-        element: <NotFound />
+        element: <h1>Not Found</h1>
     }
 ]
 
-export default routes 
+export default routes;
