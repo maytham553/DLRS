@@ -1,0 +1,130 @@
+- firstName:
+    - required
+    - type: text
+    - description: The first name of the applicant.
+    - example: "John"
+    - validation: minLength: 1, maxLength: 50
+
+- familyName
+    - required
+    - type: text
+    - description: The family name of the applicant.
+    - example: "Doe"
+    - validation: minLength: 1, maxLength: 50
+
+- phoneNumber
+    - required
+    - type: text
+    - description: The phone number of the applicant.
+    - example: "+1234567890"
+    - validation: minLength: 10, maxLength: 15
+    
+- gender
+    - required
+    - type: dropdown
+    - options: Male, Female
+
+
+- birthDate
+    - required
+    - type: date
+    - description: The birth date of the applicant.
+    - example: "1990-01-01"
+    - validation: format: YYYY-MM-DD
+
+
+- birthPlace
+    - required
+    - type: text
+    - description: The place of birth of the applicant.
+    - example: "Iraq"
+    - validation: minLength: 1, maxLength: 100
+
+
+- licenseNumber
+    - required
+    - type: text
+    - description: The license number of the applicant.
+    - example: "123456789"
+    - validation: minLength: 1, maxLength: 50
+
+- licenseClass [A, B, C, D, E]
+    - required
+    - type: dropdown
+    - description: The class of the license.
+    - options: A, B, C, D, E
+
+
+- issuerCountry
+    - required
+    - type: text
+    - description: The country where the license was issued.
+    - example: "Iraq"
+    - validation: minLength: 1, maxLength: 100
+
+- addressLine1
+    - required
+    - type: text
+    - description: The first line of the address.
+    - example: "123 Main St"
+    - validation: minLength: 1, maxLength: 100
+- addressLine2
+    - optional
+    - type: text
+    - description: The second line of the address.
+    - example: "Apt 4B"
+    - validation: minLength: 1, maxLength: 100
+
+- city
+    - required
+    - type: text
+    - description: The city of residence.
+    - example: "Baghdad"
+    - validation: minLength: 1, maxLength: 50
+
+- state
+    - required
+    - type: text
+    - description: The state of residence.
+    - example: "Baghdad"
+    - validation: minLength: 1, maxLength: 50
+
+- zipCode
+    - required
+    - type: text
+    - description: The zip code of the residence.
+    - example: "12345"
+    - validation: minLength: 5, maxLength: 10, numbers only
+
+- country
+    - required
+    - type: text
+    - description: The country of residence.
+    - example: "Iraq"
+    - validation: minLength: 1, maxLength: 50
+
+- residenceCountry
+    - required
+    - type: text
+    - description: The country of residence.
+    - example: "Iraq"
+    - validation: minLength: 1, maxLength: 50
+
+- duration
+    - required
+    - type: radiobutton
+    - description: The duration of the IDP.
+    - options: 1 year, 3 years
+
+- requestIdCard
+    - type: checkbox
+    - description: Whether the applicant wants an ID card.
+    - options: Yes, No
+
+please create a form that accept the information mentioned above, these information should be store in firebase/firestore
+in a collection named "idps", also each idp has an id and that id should be in the following format:
+YYMMDD{RANDOM_ID}
+the random id should be generated using nanoid library
+please keep the design simple, I've already installed chakra, group related information together
+
+we have already installed react hook form library to manage the state of the forms

@@ -1,4 +1,3 @@
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { BrowserRouter, useRoutes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import routes from "./routes";
@@ -11,13 +10,11 @@ function AppRoutes() {
 
 function App() {
     return (
-        <ChakraProvider value={defaultSystem}>
-            <AuthProvider>
-                <BrowserRouter>
-                    <AppRoutes />
-                </BrowserRouter>
-            </AuthProvider>
-        </ChakraProvider>
+        <AuthProvider>
+            <BrowserRouter>
+                <AppRoutes />
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
 

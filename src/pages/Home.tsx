@@ -1,20 +1,20 @@
-import { Box, Button, Heading, Text } from "@chakra-ui/react";
 import Layout from "../components/Layout";
 import { Link } from "react-router-dom";
+import { Button } from "../components/ui/button";
 
 export default function Home() {
     return (
         <Layout>
-            <Box>
-                <Heading>DLRS - Digital License Registration System</Heading>
-                <Text>
+            <div>
+                <h2>DLRS - Digital License Registration System</h2>
+                <span>
                     Welcome to the Digital License Registration System Home
                     page.
-                </Text>
-            </Box>
+                </span>
+            </div>
 
             <Link to={"/idp"}>
-                <Button>IDP</Button>
+                <Button variant={"destructive"}>IDP</Button>
             </Link>
         </Layout>
     );

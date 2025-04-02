@@ -1,9 +1,10 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { ApplicationForm } from "./Application";
 
 export const IDPHome = () => {
     return (
-        <Box>
-            <Heading>DLRS - Digital License Registration System</Heading>
-        </Box>
+        <div>
+            <h2>DLRS - Digital License Registration System</h2>
+            <ApplicationForm />
+        </div>
     );
 };

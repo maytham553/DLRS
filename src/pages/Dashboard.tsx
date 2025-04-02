@@ -1,4 +1,3 @@
-import { Box, Heading, Text, Grid, Button, Flex } from '@chakra-ui/react'
 import Layout from '../components/Layout'
 import { useAuth } from '../context/AuthContext'
 
@@ -7,123 +6,76 @@ export default function Dashboard() {
 
     return (
         <Layout>
-            <Box
-                bg="white"
-                rounded="xl"
-                shadow="lg"
-                overflow="hidden"
-                mx="auto"
-                p={{ base: 6, md: 8 }}
-            >
-                <Flex direction="column" gap={8}>
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mx-auto p-6 md:p-8">
+                <div className="flex flex-col gap-8">
                     {/* Header section */}
-                    <Box mb={6}>
-                        <Heading
-                            as="h1"
-                            fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
-                            bgGradient="linear(to-r, brand.500, accent.500)"
-                            bgClip="text"
-                            mb={4}
-                        >
+                    <div className="mb-6">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl bg-gradient-to-r from-brand-500 to-accent-500 bg-clip-text text-transparent mb-4">
                             Agent Dashboard
-                        </Heading>
-                        <Text color="gray.600">
+                        </h1>
+                        <p className="text-gray-600">
                             Welcome {user?.email}! Manage your Digital License Registration System from here.
-                        </Text>
-                    </Box>
+                        </p>
+                    </div>
 
                     {/* Stats Overview */}
-                    <Grid
-                        templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
-                        gap={6}
-                    >
-                        <Box bg="brand.50" p={6} rounded="lg" borderLeft="4px solid" borderColor="brand.500">
-                            <Text fontSize="sm" color="gray.500">Total Applications</Text>
-                            <Heading as="h3" size="lg">0</Heading>
-                        </Box>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="bg-brand-50 p-6 rounded-lg border-l-4 border-brand-500">
+                            <p className="text-sm text-gray-500">Total Applications</p>
+                            <h3 className="text-lg font-bold">0</h3>
+                        </div>
 
-                        <Box bg="accent.50" p={6} rounded="lg" borderLeft="4px solid" borderColor="accent.500">
-                            <Text fontSize="sm" color="gray.500">Pending Review</Text>
-                            <Heading as="h3" size="lg">0</Heading>
-                        </Box>
+                        <div className="bg-accent-50 p-6 rounded-lg border-l-4 border-accent-500">
+                            <p className="text-sm text-gray-500">Pending Review</p>
+                            <h3 className="text-lg font-bold">0</h3>
+                        </div>
 
-                        <Box bg="green.50" p={6} rounded="lg" borderLeft="4px solid" borderColor="green.500">
-                            <Text fontSize="sm" color="gray.500">Approved</Text>
-                            <Heading as="h3" size="lg">0</Heading>
-                        </Box>
-                    </Grid>
+                        <div className="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                            <p className="text-sm text-gray-500">Approved</p>
+                            <h3 className="text-lg font-bold">0</h3>
+                        </div>
+                    </div>
 
                     {/* Recent Applications */}
-                    <Box mt={4}>
-                        <Flex justify="space-between" align="center" mb={4}>
-                            <Heading as="h2" size="md">Recent Applications</Heading>
-                            <Button
-                                size="sm"
-                                colorScheme="brand"
-                                bgGradient="linear(to-r, brand.500, accent.500)"
-                                color="white"
-                                _hover={{ bgGradient: "linear(to-r, brand.600, accent.600)" }}
-                            >
+                    <div className="mt-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-md font-bold">Recent Applications</h2>
+                            <button className="text-sm px-4 py-2 bg-gradient-to-r from-brand-500 to-accent-500 text-white rounded hover:bg-gradient-to-r hover:from-brand-600 hover:to-accent-600">
                                 View All
-                            </Button>
-                        </Flex>
+                            </button>
+                        </div>
 
                         {/* Empty state for now */}
-                        <Box
-                            p={10}
-                            bg="gray.50"
-                            rounded="md"
-                            textAlign="center"
-                            border="1px dashed"
-                            borderColor="gray.200"
-                        >
-                            <Text color="gray.500" mb={4}>No applications to display yet</Text>
-                            <Button
-                                colorScheme="brand"
-                                size="md"
-                            >
+                        <div className="p-10 bg-gray-50 rounded-md text-center border border-dashed border-gray-200">
+                            <p className="text-gray-500 mb-4">No applications to display yet</p>
+                            <button className="px-4 py-2 bg-brand-500 text-white rounded hover:bg-brand-600">
                                 Create New Application
-                            </Button>
-                        </Box>
-                    </Box>
+                            </button>
+                        </div>
+                    </div>
 
                     {/* Quick Actions */}
-                    <Box mt={4}>
-                        <Heading as="h2" size="md" mb={4}>Quick Actions</Heading>
-                        <Flex
-                            gap={4}
-                            flexWrap="wrap"
-                        >
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                colorScheme="brand"
-                            >
-                                <Box as="span" fontSize="xl" mr={2}>🆔</Box>
+                    <div className="mt-4">
+                        <h2 className="text-md font-bold mb-4">Quick Actions</h2>
+                        <div className="flex gap-4 flex-wrap">
+                            <button className="px-6 py-3 text-lg border border-brand-500 text-brand-500 rounded hover:bg-brand-50 flex items-center">
+                                <span className="text-xl mr-2">🆔</span>
                                 Create New IDP
-                            </Button>
+                            </button>
 
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                colorScheme="accent"
-                            >
-                                <Box as="span" fontSize="xl" mr={2}>🔍</Box>
+                            <button className="px-6 py-3 text-lg border border-accent-500 text-accent-500 rounded hover:bg-accent-50 flex items-center">
+                                <span className="text-xl mr-2">🔍</span>
                                 Search Records
-                            </Button>
+                            </button>
 
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                colorScheme="gray"
-                            >
-                                <Box as="span" fontSize="xl" mr={2}>📋</Box>
+                            <button className="px-6 py-3 text-lg border border-gray-500 text-gray-500 rounded hover:bg-gray-50 flex items-center">
+                                <span className="text-xl mr-2">📋</span>
                                 Generate Reports
-                            </Button>
-                        </Flex>
-                    </Box>
-                </Flex>
-            </Box>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </Layout>
     )
-} 
+}
