@@ -15,9 +15,8 @@ import {
   query,
   orderBy,
   startAt,
-  endAt,
   limit,
-  startAfter,
+  endAt,
 } from "firebase/firestore";
 import {
   getStorage,
@@ -97,34 +96,23 @@ export const getUserIdpApplications = async (searchTerm = "") => {
     if (searchTerm) {
       // Firebase doesn't support OR conditions directly in queries,
       // so we'll need to do multiple queries and combine results
-      const nameQuery = query(
+      const idQuery = query(
         collection(db, "idps"),
-        orderBy("name"),
-        // Use startAt and endAt with the search term to get partial matches
-        startAt(searchTerm.toLowerCase()),
-        endAt(searchTerm.toLowerCase() + "\uf8ff"),
-        limit(250)
-      );
-
-      const familyNameQuery = query(
-        collection(db, "idps"),
-        orderBy("familyName"),
-        startAt(searchTerm.toLowerCase()),
-        endAt(searchTerm.toLowerCase() + "\uf8ff"),
+        orderBy("id"),
+        startAt(searchTerm),
+        endAt(searchTerm),
         limit(250)
       );
 
       // Execute both queries
-      const nameSnapshot = await getDocs(nameQuery);
-      const familyNameSnapshot = await getDocs(familyNameQuery);
+      const nameSnapshot = await getDocs(idQuery);
 
       // Combine and deduplicate results
       const nameResults = nameSnapshot.docs;
-      const familyNameResults = familyNameSnapshot.docs;
 
       // Use Map to deduplicate by document ID
       const uniqueDocs = new Map();
-      [...nameResults, ...familyNameResults].forEach((doc) => {
+      [...nameResults].forEach((doc) => {
         uniqueDocs.set(doc.id, doc);
       });
 
