@@ -1,16 +1,19 @@
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { db, uploadFile } from "../../services/firebase";
+import { IDPFormData, IDPFormInput, Gender, LicenseClass, Duration, RequestIdCard } from "../../types/idp";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
-import { IDPFormData, IDPFormInput } from "../../types/idp";
-import { generateIdpId, generateImageId } from "../../utils/idGenerator";
-import { addIdpApplication, uploadFile } from "../../services/firebase";
 import { FileUpload } from "../../components/FileUpload";
-import { useNavigate } from "react-router-dom";
 
-export const IDPApplication = () => {
+export const IDPEdit = () => {
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [idpId] = useState(generateIdpId());
+    const [isLoading, setIsLoading] = useState(true);
 
     // State for upload progress
     const [personalPhotoProgress, setPersonalPhotoProgress] = useState(0);
@@ -46,25 +49,26 @@ export const IDPApplication = () => {
         handleSubmit,
         formState: { errors },
         reset,
+        setValue
     } = useForm<IDPFormInput>({
         defaultValues: {
-            id: idpId,
-            name: "Maytham",
-            familyName: "Al-Qahtani",
-            phoneNumber: "0505050505",
+            id: "",
+            name: "",
+            familyName: "",
+            phoneNumber: "",
             gender: "Male",
-            birthDate: "1990-01-01",
-            birthPlace: "Saudi Arabia",
-            licenseNumber: "1234567890",
+            birthDate: "",
+            birthPlace: "",
+            licenseNumber: "",
             licenseClass: "A",
-            issuerCountry: "Saudi Arabia",
-            addressLine1: "123 Main St",
-            addressLine2: "Apt 1",
-            city: "Riyadh",
-            state: "Riyadh",
-            zipCode: "12345",
-            country: "Saudi Arabia",
-            residenceCountry: "Saudi Arabia",
+            issuerCountry: "",
+            addressLine1: "",
+            addressLine2: "",
+            city: "",
+            state: "",
+            zipCode: "",
+            country: "",
+            residenceCountry: "",
             duration: "1 year",
             requestIdCard: "No",
             personalPhoto: null,
@@ -73,14 +77,60 @@ export const IDPApplication = () => {
         },
     });
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        const fetchApplication = async () => {
+            if (!id) return;
+
+            setIsLoading(true);
+            try {
+                const docRef = doc(db, "idps", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data() as IDPFormData;
+
+                    // Set form data with react-hook-form
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (key !== 'personalPhoto' && key !== 'licenseFrontPhoto' && key !== 'licenseBackPhoto') {
+                            setValue(key as keyof IDPFormInput, value);
+                        }
+                    });
+
+                    // Set up image previews and URLs
+                    if (data.personalPhoto) {
+                        setPersonalPhotoPreview(data.personalPhoto);
+                        setPersonalPhotoUrl(data.personalPhoto);
+                    }
+
+                    if (data.licenseFrontPhoto) {
+                        setLicenseFrontPhotoPreview(data.licenseFrontPhoto);
+                        setLicenseFrontPhotoUrl(data.licenseFrontPhoto);
+                    }
+
+                    if (data.licenseBackPhoto) {
+                        setLicenseBackPhotoPreview(data.licenseBackPhoto);
+                        setLicenseBackPhotoUrl(data.licenseBackPhoto);
+                    }
+                } else {
+                    setError("Application not found");
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err.message : "Failed to load application");
+                console.error("Error loading application:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchApplication();
+    }, [id, setValue]);
 
     // Upload a single file and update state
     const uploadSingleFile = async (
         file: File,
         fileType: 'personalPhoto' | 'licenseFrontPhoto' | 'licenseBackPhoto'
     ) => {
-        if (!file) return;
+        if (!file || !id) return;
 
         try {
             // Set uploading state
@@ -90,9 +140,7 @@ export const IDPApplication = () => {
             setPhotoErrors(prev => ({ ...prev, [fileType]: "" }));
 
             // Create a path for the file
-            // get auth firebase user id 
-
-            const path = `idps/${idpId}/${fileType}-${generateImageId()}`;
+            const path = `idps/${id}/${fileType}-${Date.now()}`;
 
             // Determine which progress setter to use
             const progressSetter =
@@ -127,7 +175,6 @@ export const IDPApplication = () => {
 
     // Handle file selection for each upload
     const handlePersonalPhotoSelect = async (file: File | null) => {
-        // Create a preview if a file is selected
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
@@ -138,9 +185,8 @@ export const IDPApplication = () => {
             // Upload the file immediately
             await uploadSingleFile(file, 'personalPhoto');
         } else {
-            // Clear preview and URL if file is removed
-            setPersonalPhotoPreview(undefined);
-            setPersonalPhotoUrl(null);
+            // Keep the existing URL if no new file is selected
+            setPersonalPhotoPreview(personalPhotoUrl);
             setPersonalPhotoProgress(0);
         }
     };
@@ -156,8 +202,8 @@ export const IDPApplication = () => {
             // Upload the file immediately
             await uploadSingleFile(file, 'licenseFrontPhoto');
         } else {
-            setLicenseFrontPhotoPreview(undefined);
-            setLicenseFrontPhotoUrl(null);
+            // Keep the existing URL if no new file is selected
+            setLicenseFrontPhotoPreview(licenseFrontPhotoUrl);
             setLicenseFrontPhotoProgress(0);
         }
     };
@@ -173,8 +219,8 @@ export const IDPApplication = () => {
             // Upload the file immediately
             await uploadSingleFile(file, 'licenseBackPhoto');
         } else {
-            setLicenseBackPhotoPreview(undefined);
-            setLicenseBackPhotoUrl(null);
+            // Keep the existing URL if no new file is selected
+            setLicenseBackPhotoPreview(licenseBackPhotoUrl);
             setLicenseBackPhotoProgress(0);
         }
     };
@@ -203,6 +249,8 @@ export const IDPApplication = () => {
     };
 
     const onSubmit: SubmitHandler<IDPFormInput> = async (data) => {
+        if (!id) return;
+
         // Check if any uploads are in progress
         if (uploading.personalPhoto || uploading.licenseFrontPhoto || uploading.licenseBackPhoto) {
             setError("Please wait for all file uploads to complete before submitting");
@@ -218,45 +266,45 @@ export const IDPApplication = () => {
         setError(null);
 
         try {
-            // Prepare data with photo URLs for Firestore
-            const idpData: IDPFormData = {
+            // Initialize the update data with the current form data
+            const updateData: Partial<IDPFormData> = {
                 ...data,
                 personalPhoto: personalPhotoUrl!,
                 licenseFrontPhoto: licenseFrontPhotoUrl!,
                 licenseBackPhoto: licenseBackPhotoUrl!
             };
 
-            // Submit form data to Firestore
-            const result = await addIdpApplication(idpData);
+            // Update the document
+            const docRef = doc(db, "idps", id);
+            await updateDoc(docRef, updateData);
 
-            if (result.error) {
-                throw new Error("Failed to submit application");
-            }
-
-            // Redirect to the index page
-            navigate("/idp");
+            // Navigate to the view page instead of index
+            navigate(`/idp/view/${id}`);
 
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Something went wrong");
+            setError(err instanceof Error ? err.message : "Failed to update application");
+            console.error("Error updating application:", err);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    return (
-        <div className="max-w-4xl mx-auto p-6">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
-                <h1 className="text-2xl font-bold">New IDP Application</h1>
-                <div className="flex space-x-2">
-                    <button
-                        type="button"
-                        onClick={() => navigate("/idp")}
-                        className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-                    >
-                        Back to List
-                    </button>
+    // Render loading state
+    if (isLoading) {
+        return (
+            <div className="max-w-4xl mx-auto p-6">
+                <h1 className="text-2xl font-bold mb-4">Edit IDP Application</h1>
+                <div className="flex flex-col items-center justify-center p-8">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+                    <p className="text-gray-600">Loading application data...</p>
                 </div>
             </div>
+        );
+    }
+
+    return (
+        <div className="max-w-4xl mx-auto p-6">
+            <h1 className="text-2xl font-bold mb-6">Edit International Driving Permit Application</h1>
 
             {error && (
                 <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-700 rounded">
@@ -458,8 +506,6 @@ export const IDPApplication = () => {
                     </div>
                 </div>
 
-
-
                 {/* Address Information Section */}
                 <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                     <h2 className="text-xl font-semibold mb-4">Address Information</h2>
@@ -535,8 +581,7 @@ export const IDPApplication = () => {
                                     {...register("zipCode", {
                                         required: "Zip code is required",
                                         minLength: { value: 5, message: "Zip code must be at least 5 characters" },
-                                        maxLength: { value: 10, message: "Zip code must not exceed 10 characters" },
-                                        pattern: { value: /^\d+$/, message: "Zip code must contain only numbers" }
+                                        maxLength: { value: 10, message: "Zip code must not exceed 10 characters" }
                                     })}
                                     className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                                 />
@@ -622,6 +667,7 @@ export const IDPApplication = () => {
                                         // Need to manually set the value since we're using a checkbox for a string field
                                         e.target.value = value;
                                     }}
+                                    defaultChecked={register("requestIdCard").value === "Yes"}
                                 />
                                 <label htmlFor="requestIdCard">Yes, I want an ID card</label>
                             </div>
@@ -629,17 +675,24 @@ export const IDPApplication = () => {
                     </div>
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-end space-x-4">
+                    <button
+                        type="button"
+                        onClick={() => navigate(`/idp/view/${id}`)}
+                        className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                    >
+                        Cancel
+                    </button>
                     <button
                         type="submit"
                         disabled={isSubmitting || uploading.personalPhoto || uploading.licenseFrontPhoto || uploading.licenseBackPhoto}
                         className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300"
                     >
                         {isSubmitting
-                            ? "Submitting..."
+                            ? "Saving..."
                             : uploading.personalPhoto || uploading.licenseFrontPhoto || uploading.licenseBackPhoto
                                 ? "Uploading..."
-                                : "Submit Application"
+                                : "Save Changes"
                         }
                     </button>
                 </div>
@@ -647,3 +700,5 @@ export const IDPApplication = () => {
         </div>
     );
 };
+
+export default IDPEdit; 
