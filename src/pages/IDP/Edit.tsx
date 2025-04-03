@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db, uploadFile } from "../../services/firebase";
-import { IDPFormData, IDPFormInput, Gender, LicenseClass, Duration, RequestIdCard } from "../../types/idp";
+import { IDPFormData, IDPFormInput, Gender, LicenseClass, Duration, RequestIdCard, StatusType } from "../../types/idp";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FileUpload } from "../../components/FileUpload";
 
@@ -14,6 +14,8 @@ export const IDPEdit = () => {
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [currentStatus, setCurrentStatus] = useState<StatusType>('approved');
+    const [hasExpired, setHasExpired] = useState(false);
 
     // State for upload progress
     const [personalPhotoProgress, setPersonalPhotoProgress] = useState(0);
@@ -49,8 +51,9 @@ export const IDPEdit = () => {
         handleSubmit,
         formState: { errors },
         reset,
-        setValue
-    } = useForm<IDPFormInput>({
+        setValue,
+        watch
+    } = useForm<IDPFormInput & { status: StatusType }>({
         defaultValues: {
             id: "",
             name: "",
@@ -73,9 +76,13 @@ export const IDPEdit = () => {
             requestIdCard: "No",
             personalPhoto: null,
             licenseFrontPhoto: null,
-            licenseBackPhoto: null
+            licenseBackPhoto: null,
+            status: "approved"
         },
     });
+
+    // Watch for status changes
+    const formStatus = watch("status");
 
     useEffect(() => {
         const fetchApplication = async () => {
@@ -92,9 +99,14 @@ export const IDPEdit = () => {
                     // Set form data with react-hook-form
                     Object.entries(data).forEach(([key, value]) => {
                         if (key !== 'personalPhoto' && key !== 'licenseFrontPhoto' && key !== 'licenseBackPhoto') {
-                            setValue(key as keyof IDPFormInput, value);
+                            setValue(key as keyof (IDPFormInput & { status: StatusType }), value);
                         }
                     });
+
+                    // Set status (default to 'approved' if not set)
+                    const status = data.status || 'approved';
+                    setValue('status', status as StatusType);
+                    setCurrentStatus(status as StatusType);
 
                     // Set up image previews and URLs
                     if (data.personalPhoto) {
@@ -110,6 +122,18 @@ export const IDPEdit = () => {
                     if (data.licenseBackPhoto) {
                         setLicenseBackPhotoPreview(data.licenseBackPhoto);
                         setLicenseBackPhotoUrl(data.licenseBackPhoto);
+                    }
+
+                    // Check if the IDP has expired
+                    if (data.createdAt) {
+                        const issueDate = new Date((data.createdAt as any).seconds * 1000);
+                        const expirationDate = new Date(issueDate);
+                        if (data.duration === "1 year") {
+                            expirationDate.setFullYear(issueDate.getFullYear() + 1);
+                        } else {
+                            expirationDate.setFullYear(issueDate.getFullYear() + 3);
+                        }
+                        setHasExpired(new Date() > expirationDate);
                     }
                 } else {
                     setError("Application not found");
@@ -248,7 +272,7 @@ export const IDPEdit = () => {
         return isValid;
     };
 
-    const onSubmit: SubmitHandler<IDPFormInput> = async (data) => {
+    const onSubmit: SubmitHandler<IDPFormInput & { status: StatusType }> = async (data) => {
         if (!id) return;
 
         // Check if any uploads are in progress
@@ -271,7 +295,8 @@ export const IDPEdit = () => {
                 ...data,
                 personalPhoto: personalPhotoUrl!,
                 licenseFrontPhoto: licenseFrontPhotoUrl!,
-                licenseBackPhoto: licenseBackPhotoUrl!
+                licenseBackPhoto: licenseBackPhotoUrl!,
+                status: data.status
             };
 
             // Update the document
@@ -286,6 +311,20 @@ export const IDPEdit = () => {
             console.error("Error updating application:", err);
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    // Get status color
+    const getStatusColor = (status: StatusType) => {
+        switch (status) {
+            case 'approved':
+                return 'bg-green-100 text-green-800';
+            case 'canceled':
+                return 'bg-red-100 text-red-800';
+            case 'expired':
+                return 'bg-orange-100 text-orange-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
         }
     };
 
@@ -313,6 +352,53 @@ export const IDPEdit = () => {
             )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                {/* Status Section */}
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h2 className="text-xl font-semibold mb-4">IDP Status</h2>
+                    <div className="flex items-center mb-4">
+                        <div className={`px-3 py-1 rounded-full text-xs font-medium mr-3 ${getStatusColor(formStatus)}`}>
+                            {formStatus.toUpperCase()}
+                        </div>
+                        {hasExpired && formStatus === 'approved' && (
+                            <div className="text-xs text-orange-500">
+                                (Note: Expiration date has passed, but status remains APPROVED)
+                            </div>
+                        )}
+                    </div>
+                    <div>
+                        <p className="font-medium mb-2">Change Status</p>
+                        <div className="flex flex-wrap gap-3">
+                            <label className={`flex items-center px-4 py-2 rounded-md border ${formStatus === 'approved' ? 'bg-green-50 border-green-200' : 'bg-white'}`}>
+                                <input
+                                    type="radio"
+                                    value="approved"
+                                    {...register("status")}
+                                    className="mr-2"
+                                />
+                                Approved
+                            </label>
+                            <label className={`flex items-center px-4 py-2 rounded-md border ${formStatus === 'canceled' ? 'bg-red-50 border-red-200' : 'bg-white'}`}>
+                                <input
+                                    type="radio"
+                                    value="canceled"
+                                    {...register("status")}
+                                    className="mr-2"
+                                />
+                                Canceled
+                            </label>
+                            <label className={`flex items-center px-4 py-2 rounded-md border ${formStatus === 'expired' ? 'bg-orange-50 border-orange-200' : 'bg-white'}`}>
+                                <input
+                                    type="radio"
+                                    value="expired"
+                                    {...register("status")}
+                                    className="mr-2"
+                                />
+                                Expired
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Personal Information Section */}
                 <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                     <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
