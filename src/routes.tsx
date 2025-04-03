@@ -2,11 +2,13 @@ import { RouteObject } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Dashboard from "./pages/Dashboard";
 import { IDPHome } from "./pages/IDP";
 import { IDPApplication } from "./pages/IDP/Application";
 import IDPView from "./pages/IDP/View";
 import IDPEdit from "./pages/IDP/Edit";
+import VerifyIDP from "./pages/VerifyIDP";
+import PublicIDPApplication from "./pages/PublicIDPApplication";
+import NotFound from "./pages/NotFound";
 
 const routes: RouteObject[] = [
     {
@@ -18,12 +20,12 @@ const routes: RouteObject[] = [
         element: <Login />,
     },
     {
-        path: "/dashboard",
-        element: (
-            <ProtectedRoute>
-                <Dashboard />
-            </ProtectedRoute>
-        ),
+        path: "/verify-idp",
+        element: <VerifyIDP />,
+    },
+    {
+        path: "/public-idp-application",
+        element: <PublicIDPApplication />,
     },
     {
         path: "/idp",
@@ -59,7 +61,7 @@ const routes: RouteObject[] = [
     },
     {
         path: "*",
-        element: <h1>Not Found</h1>,
+        element: <NotFound />,
     },
 ];
 

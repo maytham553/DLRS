@@ -24,27 +24,29 @@ export default function Home() {
                 <div className="flex flex-wrap gap-4 justify-center">
                     {user ? (
                         <>
-                            <Link to="/dashboard">
+                            <Link to="/idp">
                                 <Button size="lg" className="h-12 px-8">
-                                    Dashboard
+                                    IDP Management
                                 </Button>
                             </Link>
-                            <Link to="/idp">
+                            <Link to="/verify-idp">
                                 <Button size="lg" variant="outline" className="h-12 px-8">
-                                    IDP Management
+                                    Verify IDP
                                 </Button>
                             </Link>
                         </>
                     ) : (
                         <>
-                            <Link to="/login">
-                                <Button size="lg" className="h-12 px-8">
-                                    Sign In
+                            <Link to="/verify-idp">
+                                <Button size="lg" variant="outline" className="h-12 px-8">
+                                    Verify IDP
                                 </Button>
                             </Link>
-                            <Button size="lg" variant="outline" className="h-12 px-8">
-                                Learn More
-                            </Button>
+                            <Link to="/public-idp-application">
+                                <Button size="lg" className="h-12 px-8">
+                                    Apply for IDP
+                                </Button>
+                            </Link>
                         </>
                     )}
                 </div>
@@ -66,6 +68,8 @@ export default function Home() {
                     ))}
                 </div>
             </div>
+
+
         </div>
     );
 }

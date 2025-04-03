@@ -21,12 +21,16 @@ export default function Navigation() {
 
     const isActive = (path: string) => location.pathname === path;
 
-    const links = [{ name: "Home", path: "/" }];
+    const links = [
+        { name: "Home", path: "/" },
+        { name: "Verify IDP", path: "/verify-idp" },
+        { name: "IDP Application", path: "/public-idp-application" }
+    ];
+
     if (!user) {
         links.push({ name: "Login", path: "/login" });
     } else {
         links.push(
-            { name: "Dashboard", path: "/dashboard" },
             { name: "IDP", path: "/idp" }
         );
     }
