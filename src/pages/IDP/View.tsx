@@ -2,7 +2,36 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../services/firebase";
-import { IDPFormData } from "../../types/idp";
+import { IDPFormData, StatusType } from "../../types/idp";
+
+// Status utility functions
+const getStatusDisplay = (status?: string, hasExpired = false): { text: string; className: string } => {
+    // Default to approved if no status is set
+    const currentStatus = status as StatusType || 'approved';
+
+    switch (currentStatus) {
+        case 'canceled':
+            return {
+                text: 'CANCELED',
+                className: 'bg-red-100 text-red-700'
+            };
+        case 'expired':
+            return {
+                text: 'EXPIRED',
+                className: 'bg-orange-100 text-orange-700'
+            };
+        case 'approved':
+            return {
+                text: 'APPROVED',
+                className: 'bg-green-100 text-green-700'
+            };
+        default:
+            return {
+                text: 'APPROVED',
+                className: 'bg-green-100 text-green-700'
+            };
+    }
+};
 
 export const IDPView = () => {
     const { id } = useParams<{ id: string }>();
@@ -10,6 +39,7 @@ export const IDPView = () => {
     const [application, setApplication] = useState<IDPFormData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [hasExpired, setHasExpired] = useState(false);
 
     useEffect(() => {
         const fetchApplication = async () => {
@@ -21,7 +51,20 @@ export const IDPView = () => {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    setApplication(docSnap.data() as IDPFormData);
+                    const data = docSnap.data() as IDPFormData;
+                    setApplication(data);
+
+                    // Check if the IDP has expired
+                    if (data.createdAt) {
+                        const issueDate = new Date((data.createdAt as any).seconds * 1000);
+                        const expirationDate = new Date(issueDate);
+                        if (data.duration === "1 year") {
+                            expirationDate.setFullYear(issueDate.getFullYear() + 1);
+                        } else {
+                            expirationDate.setFullYear(issueDate.getFullYear() + 3);
+                        }
+                        setHasExpired(new Date() > expirationDate);
+                    }
                 } else {
                     setError("Application not found");
                 }
@@ -85,6 +128,9 @@ export const IDPView = () => {
         );
     }
 
+    // Get status display information
+    const statusInfo = getStatusDisplay(application.status, hasExpired);
+
     return (
         <div className="max-w-5xl mx-auto p-6">
             <div className="flex justify-between items-center mb-6">
@@ -106,8 +152,19 @@ export const IDPView = () => {
             </div>
 
             <div className="bg-white shadow-md rounded-lg overflow-hidden mb-6">
+                {/* Status indicator */}
+                <div className={`h-1.5 w-full ${application.status === 'canceled' ? 'bg-red-500' :
+                        application.status === 'expired' ? 'bg-orange-500' :
+                            'bg-green-500'
+                    }`}></div>
+
                 <div className="p-6">
-                    <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold">Personal Information</h2>
+                        <div className={`px-3 py-1 rounded-full text-xs font-medium ${statusInfo.className}`}>
+                            {statusInfo.text}
+                        </div>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <p className="text-sm text-gray-500">ID</p>
@@ -200,6 +257,18 @@ export const IDPView = () => {
                         <div>
                             <p className="text-sm text-gray-500">Request ID Card</p>
                             <p className="font-medium">{application.requestIdCard}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Status</p>
+                            <p className={`font-medium ${application.status === 'canceled' ? 'text-red-600' :
+                                    application.status === 'expired' ? 'text-orange-600' :
+                                        'text-green-600'
+                                }`}>
+                                {statusInfo.text}
+                                {hasExpired && (!application.status || application.status === 'approved') &&
+                                    <span className="ml-2 text-xs text-orange-500">(Expiration date passed)</span>
+                                }
+                            </p>
                         </div>
                     </div>
                 </div>
