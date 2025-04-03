@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -33,10 +36,13 @@ export default function Login() {
     return (
         <div className="min-h-screen grid md:grid-cols-2 gap-0">
             {/* Image side */}
-            <div className="hidden md:flex bg-blue-600 text-white items-center justify-center p-8">
+            <div className="hidden md:flex bg-primary text-white items-center justify-center p-8">
                 <div className="max-w-md mx-auto space-y-6">
-                    <h3 className="text-3xl font-bold tracking-tight">Digital License Registration System</h3>
-                    <p className="text-xl text-blue-100">
+                    <div className="inline-block mb-6 px-4 py-1.5 bg-white/10 rounded-full">
+                        <span className="text-sm font-medium text-white">Digital License Registration System</span>
+                    </div>
+                    <h3 className="text-3xl font-bold tracking-tight">Secure Digital Licensing</h3>
+                    <p className="text-xl text-primary-foreground/80">
                         Manage and issue International Driving Permits with
                         ease.
                     </p>
@@ -47,53 +53,47 @@ export default function Login() {
             <div className="flex items-center justify-center p-8">
                 <div className="w-full max-w-md space-y-8">
                     <div className="text-center">
-                        <h3 className="text-2xl font-bold tracking-tight text-gray-900">Welcome back</h3>
-                        <span className="mt-1 text-gray-500">Sign in to your account</span>
+                        <h3 className="text-2xl font-bold tracking-tight">Welcome back</h3>
+                        <span className="mt-1 text-foreground/70">Sign in to your account</span>
                     </div>
 
                     <form onSubmit={handleLogin} className="mt-8 space-y-6">
                         <div className="space-y-5">
                             <div className="space-y-2">
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                                <input
+                                <Label htmlFor="email">Email</Label>
+                                <Input
                                     id="email"
                                     type="email"
                                     placeholder="your.email@example.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="block w-full rounded-lg border-gray-300 shadow-sm 
-                                        focus:border-blue-500 focus:ring-blue-500 px-4 py-3"
+                                    className="h-12"
                                     autoComplete="off"
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                                <input
+                                <Label htmlFor="password">Password</Label>
+                                <Input
                                     id="password"
                                     type="password"
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="block w-full rounded-lg border-gray-300 shadow-sm 
-                                        focus:border-blue-500 focus:ring-blue-500 px-4 py-3"
+                                    className="h-12"
                                     autoComplete="off"
                                 />
                             </div>
 
-                            <button
+                            <Button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="w-full flex justify-center py-3 px-4 border border-transparent 
-                                    rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 
-                                    hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
-                                    focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed
-                                    transition-colors duration-200"
+                                className="w-full h-12"
                             >
                                 {isSubmitting ? "Signing in..." : "Sign in"}
-                            </button>
+                            </Button>
                         </div>
                     </form>
                 </div>
