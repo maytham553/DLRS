@@ -2,6 +2,7 @@ export type Duration = "1 year" | "3 years";
 export type Gender = "Male" | "Female";
 export type LicenseClass = "A" | "B" | "C" | "D" | "E";
 export type RequestIdCard = "Yes" | "No";
+export type StatusType = "approved" | "canceled" | "expired";
 
 export interface IDPFormData {
   id: string;
@@ -26,6 +27,8 @@ export interface IDPFormData {
   personalPhoto: string;
   licenseFrontPhoto: string;
   licenseBackPhoto: string;
+  status?: StatusType;
+  createdAt?: { seconds: number; nanoseconds: number };
 }
 
 export interface IDPFormInput
