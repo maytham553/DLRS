@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
-import { IDPFormData, IDPFormInput } from "../../types/idp";
+import { IDPFormData, IDPFormInput, StatusType } from "../../types/idp";
 import { generateIdpId, generateImageId } from "../../utils/idGenerator";
 import { addIdpApplication, uploadFile } from "../../services/firebase";
 import { FileUpload } from "../../components/FileUpload";
@@ -46,7 +46,7 @@ export const IDPApplication = () => {
         handleSubmit,
         formState: { errors },
         reset,
-    } = useForm<IDPFormInput>({
+    } = useForm<IDPFormInput & { status: StatusType }>({
         defaultValues: {
             id: idpId,
             name: "Maytham",
@@ -69,7 +69,8 @@ export const IDPApplication = () => {
             requestIdCard: "No",
             personalPhoto: null,
             licenseFrontPhoto: null,
-            licenseBackPhoto: null
+            licenseBackPhoto: null,
+            status: "approved" // Default status is 'approved'
         },
     });
 
@@ -202,7 +203,7 @@ export const IDPApplication = () => {
         return isValid;
     };
 
-    const onSubmit: SubmitHandler<IDPFormInput> = async (data) => {
+    const onSubmit: SubmitHandler<IDPFormInput & { status: StatusType }> = async (data) => {
         // Check if any uploads are in progress
         if (uploading.personalPhoto || uploading.licenseFrontPhoto || uploading.licenseBackPhoto) {
             setError("Please wait for all file uploads to complete before submitting");
@@ -223,7 +224,8 @@ export const IDPApplication = () => {
                 ...data,
                 personalPhoto: personalPhotoUrl!,
                 licenseFrontPhoto: licenseFrontPhotoUrl!,
-                licenseBackPhoto: licenseBackPhotoUrl!
+                licenseBackPhoto: licenseBackPhotoUrl!,
+                status: "approved" // Ensure status is set to approved
             };
 
             // Submit form data to Firestore
