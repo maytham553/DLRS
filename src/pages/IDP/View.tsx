@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 import { IDPFormData, StatusType } from "../../types/idp";
+import PrintIDPCard from "../../components/PrintIDPCard";
 
 // Status utility functions
 const getStatusDisplay = (status?: string, hasExpired = false): { text: string; className: string } => {
@@ -40,6 +41,11 @@ export const IDPView = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [hasExpired, setHasExpired] = useState(false);
+    
+    // Date states for the IDP card
+    const [issueDate, setIssueDate] = useState<Date | null>(null);
+    const [expiryDate, setExpiryDate] = useState<Date | null>(null);
+    
 
     useEffect(() => {
         const fetchApplication = async () => {
@@ -54,15 +60,18 @@ export const IDPView = () => {
                     const data = docSnap.data() as IDPFormData;
                     setApplication(data);
 
-                    // Check if the IDP has expired
+                    // Check if the IDP has expired and set dates for the card
                     if (data.createdAt) {
                         const issueDate = new Date((data.createdAt as any).seconds * 1000);
+                        setIssueDate(issueDate);
+                        
                         const expirationDate = new Date(issueDate);
                         if (data.duration === "1 year") {
                             expirationDate.setFullYear(issueDate.getFullYear() + 1);
                         } else {
                             expirationDate.setFullYear(issueDate.getFullYear() + 3);
                         }
+                        setExpiryDate(expirationDate);
                         setHasExpired(new Date() > expirationDate);
                     }
                 } else {
@@ -136,6 +145,13 @@ export const IDPView = () => {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">IDP Application Details</h1>
                 <div className="space-x-2">
+                    {application && (
+                        <PrintIDPCard
+                            application={application}
+                            issueDate={issueDate}
+                            expiryDate={expiryDate}
+                        />
+                    )}
                     <Link
                         to={`/idp/edit/${id}`}
                         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -307,4 +323,4 @@ export const IDPView = () => {
     );
 };
 
-export default IDPView; 
+export default IDPView;
