@@ -7,7 +7,7 @@ import PrintIDPCard from "../../components/PrintIDPCard";
 import InternationalDriverLicenseCard from "../../components/InternationalDriverLicenseCard";
 
 // Status utility functions
-const getStatusDisplay = (status?: string, hasExpired = false): { text: string; className: string } => {
+const getStatusDisplay = (status?: string): { text: string; className: string } => {
     // Default to approved if no status is set
     const currentStatus = status as StatusType || 'approved';
 
@@ -139,7 +139,7 @@ export const IDPView = () => {
     }
 
     // Get status display information
-    const statusInfo = getStatusDisplay(application.status, hasExpired);
+    const statusInfo = getStatusDisplay(application.status);
 
     return (
         <div className="max-w-5xl mx-auto p-6">

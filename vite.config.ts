@@ -7,6 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
     plugins: [
         react(), 
+        // @ts-ignore
         tailwindcss({
             config: './tailwind.config.js',
             // Add explicit options to avoid using oklch color functions

@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 
 export const IDPApplication = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitSuccess, setSubmitSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [idpId] = useState(generateIdpId());
 
@@ -45,7 +44,6 @@ export const IDPApplication = () => {
         register,
         handleSubmit,
         formState: { errors },
-        reset,
     } = useForm<IDPFormInput & { status: StatusType }>({
         defaultValues: {
             id: idpId,

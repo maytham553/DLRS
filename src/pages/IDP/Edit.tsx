@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db, uploadFile } from "../../services/firebase";
-import { IDPFormData, IDPFormInput, Gender, LicenseClass, Duration, RequestIdCard, StatusType } from "../../types/idp";
+import { IDPFormData, IDPFormInput, StatusType } from "../../types/idp";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FileUpload } from "../../components/FileUpload";
 
@@ -11,10 +11,8 @@ export const IDPEdit = () => {
     const navigate = useNavigate();
 
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitSuccess, setSubmitSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [currentStatus, setCurrentStatus] = useState<StatusType>('approved');
     const [hasExpired, setHasExpired] = useState(false);
 
     // State for upload progress
@@ -50,7 +48,6 @@ export const IDPEdit = () => {
         register,
         handleSubmit,
         formState: { errors },
-        reset,
         setValue,
         watch
     } = useForm<IDPFormInput & { status: StatusType }>({
@@ -106,7 +103,6 @@ export const IDPEdit = () => {
                     // Set status (default to 'approved' if not set)
                     const status = data.status || 'approved';
                     setValue('status', status as StatusType);
-                    setCurrentStatus(status as StatusType);
 
                     // Set up image previews and URLs
                     if (data.personalPhoto) {
@@ -210,7 +206,7 @@ export const IDPEdit = () => {
             await uploadSingleFile(file, 'personalPhoto');
         } else {
             // Keep the existing URL if no new file is selected
-            setPersonalPhotoPreview(personalPhotoUrl);
+            setPersonalPhotoPreview(personalPhotoUrl ?? '');
             setPersonalPhotoProgress(0);
         }
     };
@@ -227,7 +223,7 @@ export const IDPEdit = () => {
             await uploadSingleFile(file, 'licenseFrontPhoto');
         } else {
             // Keep the existing URL if no new file is selected
-            setLicenseFrontPhotoPreview(licenseFrontPhotoUrl);
+            setLicenseFrontPhotoPreview(licenseFrontPhotoUrl ?? '');
             setLicenseFrontPhotoProgress(0);
         }
     };
@@ -244,7 +240,7 @@ export const IDPEdit = () => {
             await uploadSingleFile(file, 'licenseBackPhoto');
         } else {
             // Keep the existing URL if no new file is selected
-            setLicenseBackPhotoPreview(licenseBackPhotoUrl);
+            setLicenseBackPhotoPreview(licenseBackPhotoUrl ?? '');
             setLicenseBackPhotoProgress(0);
         }
     };
@@ -753,7 +749,7 @@ export const IDPEdit = () => {
                                         // Need to manually set the value since we're using a checkbox for a string field
                                         e.target.value = value;
                                     }}
-                                    defaultChecked={register("requestIdCard").value === "Yes"}
+                                    defaultChecked={(register("requestIdCard") as any).value === "Yes"}
                                 />
                                 <label htmlFor="requestIdCard">Yes, I want an ID card</label>
                             </div>
