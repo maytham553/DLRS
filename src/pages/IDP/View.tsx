@@ -4,6 +4,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 import { IDPFormData, StatusType } from "../../types/idp";
 import PrintIDPCard from "../../components/PrintIDPCard";
+import InternationalDriverLicenseCard from "../../components/InternationalDriverLicenseCard";
 
 // Status utility functions
 const getStatusDisplay = (status?: string, hasExpired = false): { text: string; className: string } => {
@@ -146,11 +147,18 @@ export const IDPView = () => {
                 <h1 className="text-2xl font-bold">IDP Application Details</h1>
                 <div className="space-x-2">
                     {application && (
-                        <PrintIDPCard
-                            application={application}
-                            issueDate={issueDate}
-                            expiryDate={expiryDate}
-                        />
+                        <>
+                            <PrintIDPCard
+                                application={application}
+                                issueDate={issueDate}
+                                expiryDate={expiryDate}
+                            />
+                            <InternationalDriverLicenseCard
+                                application={application}
+                                issueDate={issueDate}
+                                expiryDate={expiryDate}
+                            />
+                        </>
                     )}
                     <Link
                         to={`/idp/edit/${id}`}
