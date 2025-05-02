@@ -7,7 +7,7 @@ interface PrintIDPCardProps {
     expiryDate: Date | null;
 }
 
-const PrintIDPCard = ({ application, issueDate, expiryDate }: PrintIDPCardProps) => {
+const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [cardPosition, setCardPosition] = useState<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>('top-left');
     const printCardRef = useRef<HTMLDivElement>(null);
@@ -27,11 +27,12 @@ const PrintIDPCard = ({ application, issueDate, expiryDate }: PrintIDPCardProps)
         const cardHTML = printCardRef.current.innerHTML;
         
         // Create a CSS-positioned card on an A4 page
-        printWindow.document.write(`
+        printWindow.document.writeln(`
             <!DOCTYPE html>
             <html>
             <head>
                 <title>IDP Card Print</title>
+                <script src="https://cdn.tailwindcss.com"></script>
                 <style>
                     @page {
                         size: A4;
@@ -80,18 +81,6 @@ const PrintIDPCard = ({ application, issueDate, expiryDate }: PrintIDPCardProps)
                         background-color: #1f2937 !important;
                         color: white !important;
                         padding: 12px;
-                    }
-                    /* Fix for image rendering and positioning */
-                    .photo-container {
-                        float: right;
-                        width: 20mm;
-                        height: 28mm;
-                        margin-left: 10px;
-                        margin-bottom: 5px;
-                        background-color: #f3f4f6;
-                        border: 1px solid #d1d5db;
-                        border-radius: 4px;
-                        overflow: hidden;
                     }
                     .photo-container img {
                         width: 100%;
@@ -240,17 +229,21 @@ const PrintIDPCard = ({ application, issueDate, expiryDate }: PrintIDPCardProps)
                             <div className="border border-gray-300 p-4 rounded-lg bg-gray-50 flex justify-center">
                                 <div className="w-full max-w-md" ref={printCardRef}>
                                     {/* IDP Card Preview */}
-                                    <div className="idp-card bg-white border border-gray-300 rounded-lg shadow overflow-hidden">
-                                        {/* Card Header */}
-                                        <div className="card-header bg-primary text-white p-4">
-                                            <h3 className="text-xl font-bold text-center mb-1">International Driving Permit</h3>
-                                            <p className="text-sm text-center opacity-90">PERMIS DE CONDUIRE INTERNATIONAL</p>
-                                        </div>
-                                        
+                                    <div className="idp-card bg-white border border-gray-300 rounded-lg shadow overflow-hidden relative" style={{
+                                        width: '8cm',
+                                        height: '11cm'
+                                    }}>
                                         {/* Card Body */}
                                         <div className="p-4 card-body">
-                                            {/* Photo Container - Float Right */}
-                                            <div className="photo-container float-right w-20 h-28 bg-gray-100 rounded border border-gray-300 overflow-hidden ml-3 mb-2">
+                                            {/* Barcode Section */}
+                                            <div className="flex justify-center mt-4 float-right flex-col align-center gap-2">
+                                                <img 
+                                                    src={`https://api.qrserver.com/v1/create-qr-code/?data=http://google.com/test&size=100x100`} 
+                                                    alt="QR Code" 
+                                                    className="w-20 h-20"
+                                                />
+
+                                                <div className="photo-container float-right w-20 h-28 bg-gray-100 rounded border border-gray-300 overflow-hidden">
                                                 {application.personalPhoto && (
                                                     <img 
                                                         src={application.personalPhoto} 
@@ -258,31 +251,34 @@ const PrintIDPCard = ({ application, issueDate, expiryDate }: PrintIDPCardProps)
                                                         className="w-full h-full object-cover"
                                                     />
                                                 )}
+                                                </div>
+                                            
                                             </div>
-                                            
+
                                             {/* ID Section - Single line format */}
-                                            <p className="text-xs mb-2"><span className="text-gray-500">ID:</span> <span className="font-medium">{application.id}</span></p>
-                                            
+                                            <p className="text-lg mb-2"><span className="text-black text-bold"></span> <span className="font-lg">{application.id}</span></p>
+
                                             {/* Personal Info - Single line format */}
                                             <div className="space-y-1 mb-3 info-section text-xs">
-                                                <p><span className="text-gray-500">Last Name:</span> <span className="font-medium">{application.familyName}</span></p>
-                                                <p><span className="text-gray-500">First Name:</span> <span className="font-medium">{application.name}</span></p>
-                                                <p><span className="text-gray-500">Birth Date:</span> <span className="font-medium">{application.birthDate}</span></p>
-                                                <p><span className="text-gray-500">Residency:</span> <span className="font-medium">{application.residenceCountry}</span></p>
-                                                <p><span className="text-gray-500">Permit Class:</span> <span className="font-medium">{application.licenseClass}</span></p>
-                                            </div>
-                                            
-                                            {/* Dates and Place - Single line format */}
-                                            <div className="space-y-1 text-xs">
-                                                <p><span className="text-gray-500">Date of Issue:</span> <span className="font-medium">{issueDate ? issueDate.toLocaleDateString() : 'N/A'}</span></p>
-                                                <p><span className="text-gray-500">Expiry Date:</span> <span className="font-medium">{expiryDate ? expiryDate.toLocaleDateString() : 'N/A'}</span></p>
-                                                <p><span className="text-gray-500">Place of Issue:</span> <span className="font-medium">{application.city}, {application.country}</span></p>
-                                            </div>
+                                                <p><span className="text-gray-500">Last Name</span></p>
+                                                <p><span className="font-medium text-sm">{application.familyName}</span></p>
+                                                <p><span className="text-gray-500">First Name:</span></p>
+                                                <p><span className="font-medium text-sm">{application.name}</span></p>
+                                                <p><span className="text-gray-500">Birth Date</span></p>
+                                                <p><span className="font-medium text-sm">{application.birthDate}</span></p>
+                                                <p><span className="text-gray-500">Birth Place</span></p>
+                                                <p><span className="font-medium text-sm">{application.birthPlace}</span></p>
+                                                <p><span className="text-gray-500">Adderss</span></p>
+                                                <p><span className="font-medium text-sm">{application.addressLine1}</span></p>
+                                                <p><span className="text-gray-500">Original ID</span> <span className="font-medium text-sm">{application.licenseNumber}</span></p>
+                                                <p><span className="text-gray-500">Issue Date</span> <span className="font-medium text-sm">TODO</span></p>
+                                                <p><span className="text-gray-500">Expiry Date</span> <span className="font-medium text-sm">TODO</span></p>
+                                            </div>                                           
                                         </div>
                                         
                                         {/* Card Footer */}
-                                        <div className="bg-gray-100 p-3 text-center text-xs text-gray-600">
-                                            <p>This permit is valid for {application.duration} from date of issue</p>
+                                        <div className="absolute bottom-0 left-0 right-0 bg-gray-100 px-3 py-6 text-xs text-gray-600">
+                                            <p>Holder Signature: </p>
                                         </div>
                                     </div>
                                 </div>

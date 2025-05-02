@@ -52,6 +52,147 @@ export default function Home() {
                 </div>
             </div>
 
+            {/* Application Process Section */}
+            <div id="why" className="w-full my-20 py-16 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
+                <div className="container mx-auto">
+                    <div className="flex flex-col md:flex-row gap-12 items-center">
+                        <div className="w-full md:w-1/2 text-left px-6">
+                            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                                Complete Your IDP Application in Just 5 Minutes
+                            </h2>
+                            <p className="text-lg text-foreground/70 mb-8">
+                                An International Driving Permit (IDP) is essential for driving abroad, complementing your native license. 
+                                Our streamlined digital process ensures quick issuance, helping you meet international driving requirements 
+                                with confidence and legal compliance in over 150 countries worldwide.
+                            </p>
+                            <Link to="/public-idp-application">
+                                <Button size="lg" className="h-12 px-8">
+                                    APPLY NOW
+                                </Button>
+                            </Link>
+                        </div>
+                        <div className="w-full md:w-1/2 flex justify-center">
+                            <img 
+                                src="https://automobiledrivingclub.org.uk/wp-content/uploads/2022/04/Capture.png" 
+                                alt="International Driver's Permit" 
+                                className="max-w-full h-auto rounded-lg shadow-lg"
+                                width="586"
+                                height="678"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Requirements and Benefits Section */}
+            <div className="w-full my-20 py-16 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
+                <div className="container mx-auto">
+                    <div className="flex flex-col md:flex-row gap-12">
+                        {/* Requirements Column */}
+                        <div className="w-full md:w-1/2 p-8 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                            <h3 className="text-2xl font-bold mb-6">Requirements</h3>
+                            <ul className="space-y-4">
+                                <li className="flex items-start">
+                                    <span className="mr-2 text-primary">•</span>
+                                    <span>You must be 18 years or older to apply</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <span className="mr-2 text-primary">•</span>
+                                    <span>You must have a valid driver's license from your country</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <span className="mr-2 text-primary">•</span>
+                                    <span>No driving test is required</span>
+                                </li>
+                            </ul>
+                            <div className="mt-8">
+                                <Link to="/public-idp-application">
+                                    <Button className="h-12 px-8">
+                                        Apply Now
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                        
+                        {/* Benefits Column */}
+                        <div className="w-full md:w-1/2">
+                            <div className="mb-6">
+                                <div className="overflow-hidden rounded-xl">
+                                    <img 
+                                        src="https://automobiledrivingclub.org.uk/wp-content/uploads/2022/04/istockphoto-1307382585-612x612-1.jpg" 
+                                        alt="International Driving" 
+                                        className="w-full h-auto object-cover"
+                                        loading="lazy"
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                                    <div className="mb-4 text-primary text-xl">
+                                        <i className="far fa-snowflake"></i>
+                                    </div>
+                                    <p className="text-foreground/70">
+                                        Valid for 1-3 years with fast worldwide shipping options
+                                    </p>
+                                </div>
+                                <div className="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                                    <div className="mb-4 text-primary text-xl">
+                                        <i className="fas fa-tools"></i>
+                                    </div>
+                                    <p className="text-foreground/70">
+                                        Quick application process with fast approval
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* What is IDP Section */}
+            <div className="w-full my-20 py-16 bg-slate-50 dark:bg-slate-900/50 rounded-xl" id="idp">
+                <div className="container mx-auto">
+                    <div className="flex flex-col md:flex-row gap-12">
+                        {/* What is IDP Column */}
+                        <div className="w-full md:w-1/2 p-8 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                            <h2 className="text-2xl font-bold mb-6">WHAT IS IDP</h2>
+                            <p className="text-foreground/70 mb-6">
+                                The International Driving Permit <strong>(IDP)</strong> is an official document that helps you drive overseas using your existing valid driver's license. 
+                                It's commonly required by car rental agencies and frequently requested by traffic authorities when you present your foreign driver's license.
+                            </p>
+                            <div className="flex justify-center mt-8">
+                                <Link to="/public-idp-application">
+                                    <Button className="h-12 px-8">
+                                        <span className="mr-2">Learn More</span>
+                                        <span>→</span>
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                        
+                        {/* How It Works Column */}
+                        <div className="w-full md:w-1/2 p-8 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
+                            <h2 className="text-2xl font-bold mb-6">HOW IT WORKS</h2>
+                            <p className="text-foreground/70 mb-6">
+                                An IDP translates your driver's license into a format that's recognized internationally. 
+                                It's designed to be universally understood, bridging language barriers and ensuring your driving credentials 
+                                are recognized in over 150 countries worldwide.
+                            </p>
+                            <div className="flex justify-center mt-8">
+                                <Link to="/verify-idp">
+                                    <Button className="h-12 px-8">
+                                        <span className="mr-2">Learn More</span>
+                                        <span>→</span>
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Features Section */}
             <div className="w-full mt-20 md:mt-32">
                 <h2 className="text-2xl md:text-3xl font-bold mb-12 text-center">Key Features</h2>
@@ -66,6 +207,85 @@ export default function Home() {
                             <p className="text-foreground/70">{feature.description}</p>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            {/* Pricing Section */}
+            <div id="pricing" className="w-full my-20 py-16 bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-800 rounded-xl">
+                <div className="container mx-auto">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your Plan</h2>
+                        <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+                            Select the IDP duration that best fits your travel needs. Both options provide comprehensive coverage for international driving.
+                        </p>
+                    </div>
+                    
+                    <div className="flex flex-col md:flex-row gap-8 max-w-4xl mx-auto">
+                        {/* 1 Year Plan */}
+                        <div className="w-full md:w-1/2 bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px]">
+                            <div className="p-6 bg-primary/10 border-b border-border">
+                                <h3 className="text-2xl font-bold text-center">1 Year Plan</h3>
+                            </div>
+                            <div className="p-8">
+                                <ul className="space-y-4">
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Printed Booklet</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>100% Money Back Guarantee</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Express International Delivery</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>IDP Translated to 26 Languages</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        {/* 3 Year Plan */}
+                        <div className="w-full md:w-1/2 bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border-2 border-primary relative transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px]">
+                            <div className="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                                BEST VALUE
+                            </div>
+                            <div className="p-6 bg-primary/20 border-b border-border">
+                                <h3 className="text-2xl font-bold text-center">3 Year Plan</h3>
+                            </div>
+                            <div className="p-8">
+                                <ul className="space-y-4">
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Printed Booklet</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Digital Document</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>100% Money Back Guarantee</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Express International Delivery</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Digital Document in Under 24 Hours</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>IDP Translated to 26 Languages</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
