@@ -2,37 +2,36 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../services/firebase";
-import { IDPFormData, StatusType } from "../../types/idp";
+import { IDPFormData } from "../../types/idp";
 import PrintIDPCard from "../../components/PrintIDPCard";
 import InternationalDriverLicenseCard from "../../components/InternationalDriverLicenseCard";
 
 // Status utility functions
-const getStatusDisplay = (status?: string): { text: string; className: string } => {
-    // Default to approved if no status is set
-    const currentStatus = status as StatusType || 'approved';
-
-    switch (currentStatus) {
-        case 'canceled':
-            return {
-                text: 'CANCELED',
-                className: 'bg-red-100 text-red-700'
-            };
-        case 'expired':
+const getStatusDisplay = (application: IDPFormData): { text: string; className: string } => {
+    // Check if the application is canceled
+    if (application.isCanceled) {
+        return {
+            text: 'CANCELED',
+            className: 'bg-red-100 text-red-700'
+        };
+    }
+    
+    // Check if the application has expired
+    if (application.expiryDate) {
+        const expiryDate = new Date(application.expiryDate.seconds * 1000);
+        if (new Date() > expiryDate) {
             return {
                 text: 'EXPIRED',
                 className: 'bg-orange-100 text-orange-700'
             };
-        case 'approved':
-            return {
-                text: 'APPROVED',
-                className: 'bg-green-100 text-green-700'
-            };
-        default:
-            return {
-                text: 'APPROVED',
-                className: 'bg-green-100 text-green-700'
-            };
+        }
     }
+    
+    // Default to approved
+    return {
+        text: 'APPROVED',
+        className: 'bg-green-100 text-green-700'
+    };
 };
 
 export const IDPView = () => {
@@ -125,7 +124,7 @@ export const IDPView = () => {
     }
 
     // Get status display information
-    const statusInfo = getStatusDisplay(application.status);
+    const statusInfo = getStatusDisplay(application);
 
     return (
         <div className="max-w-5xl mx-auto p-6">
@@ -163,8 +162,8 @@ export const IDPView = () => {
 
             <div className="bg-white shadow-md rounded-lg overflow-hidden mb-6">
                 {/* Status indicator */}
-                <div className={`h-1.5 w-full ${application.status === 'canceled' ? 'bg-red-500' :
-                        application.status === 'expired' ? 'bg-orange-500' :
+                <div className={`h-1.5 w-full ${application.isCanceled ? 'bg-red-500' :
+                        hasExpired ? 'bg-orange-500' :
                             'bg-green-500'
                     }`}></div>
 
@@ -286,12 +285,12 @@ export const IDPView = () => {
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Status</p>
-                            <p className={`font-medium ${application.status === 'canceled' ? 'text-red-600' :
-                                    application.status === 'expired' ? 'text-orange-600' :
+                            <p className={`font-medium ${application.isCanceled ? 'text-red-600' :
+                                    hasExpired ? 'text-orange-600' :
                                         'text-green-600'
                                 }`}>
                                 {statusInfo.text}
-                                {hasExpired && (!application.status || application.status === 'approved') &&
+                                {hasExpired && !application.isCanceled &&
                                     <span className="ml-2 text-xs text-orange-500">(Expiration date passed)</span>
                                 }
                             </p>

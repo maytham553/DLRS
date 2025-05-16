@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db, uploadFile } from "../../services/firebase";
-import { IDPFormData, IDPFormInput, StatusType } from "../../types/idp";
+import { IDPFormData, IDPFormInput } from "../../types/idp";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FileUpload } from "../../components/FileUpload";
 
@@ -50,7 +50,7 @@ export const IDPEdit = () => {
         formState: { errors },
         setValue,
         watch
-    } = useForm<IDPFormInput & { status: StatusType }>({
+    } = useForm<IDPFormInput & { isCanceled: boolean }>({
         defaultValues: {
             id: "",
             name: "",
@@ -74,12 +74,12 @@ export const IDPEdit = () => {
             personalPhoto: null,
             licenseFrontPhoto: null,
             licenseBackPhoto: null,
-            status: "approved"
+            isCanceled: false
         },
     });
 
-    // Watch for status changes
-    const formStatus = watch("status");
+    // Watch for isCanceled flag changes
+    const isCanceled = watch("isCanceled");
 
     useEffect(() => {
         const fetchApplication = async () => {
@@ -96,13 +96,13 @@ export const IDPEdit = () => {
                     // Set form data with react-hook-form
                     Object.entries(data).forEach(([key, value]) => {
                         if (key !== 'personalPhoto' && key !== 'licenseFrontPhoto' && key !== 'licenseBackPhoto') {
-                            setValue(key as keyof (IDPFormInput & { status: StatusType }), value);
+                            setValue(key as keyof (IDPFormInput & { isCanceled: boolean }), value);
                         }
                     });
 
-                    // Set status (default to 'approved' if not set)
-                    const status = data.status || 'approved';
-                    setValue('status', status as StatusType);
+                    // Set isCanceled flag (default to false if not set)
+                    const isCanceled = data.isCanceled || false;
+                    setValue('isCanceled', isCanceled);
 
                     // Set up image previews and URLs
                     if (data.personalPhoto) {
@@ -303,7 +303,7 @@ export const IDPEdit = () => {
                 personalPhoto: personalPhotoUrl!,
                 licenseFrontPhoto: licenseFrontPhotoUrl!,
                 licenseBackPhoto: licenseBackPhotoUrl!,
-                status: data.status
+                isCanceled: data.isCanceled
             };
 
             // Update the document
@@ -318,20 +318,6 @@ export const IDPEdit = () => {
             console.error("Error updating application:", err);
         } finally {
             setIsSubmitting(false);
-        }
-    };
-
-    // Get status color
-    const getStatusColor = (status: StatusType) => {
-        switch (status) {
-            case 'approved':
-                return 'bg-green-100 text-green-800';
-            case 'canceled':
-                return 'bg-red-100 text-red-800';
-            case 'expired':
-                return 'bg-orange-100 text-orange-800';
-            default:
-                return 'bg-gray-100 text-gray-800';
         }
     };
 
@@ -363,46 +349,29 @@ export const IDPEdit = () => {
                 <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                     <h2 className="text-xl font-semibold mb-4">IDP Status</h2>
                     <div className="flex items-center mb-4">
-                        <div className={`px-3 py-1 rounded-full text-xs font-medium mr-3 ${getStatusColor(formStatus)}`}>
-                            {formStatus.toUpperCase()}
+                        <div className={`px-3 py-1 rounded-full text-xs font-medium mr-3 ${hasExpired ? 'bg-orange-100 text-orange-800' : (isCanceled ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800')}`}>
+                            {isCanceled ? 'CANCELED' : (hasExpired ? 'EXPIRED' : 'APPROVED')}
                         </div>
-                        {hasExpired && formStatus === 'approved' && (
+                        {hasExpired && !isCanceled && (
                             <div className="text-xs text-orange-500">
-                                (Note: Expiration date has passed, but status remains APPROVED)
+                                (Note: Expiration date has passed)
                             </div>
                         )}
                     </div>
                     <div>
-                        <p className="font-medium mb-2">Change Status</p>
-                        <div className="flex flex-wrap gap-3">
-                            <label className={`flex items-center px-4 py-2 rounded-md border ${formStatus === 'approved' ? 'bg-green-50 border-green-200' : 'bg-white'}`}>
-                                <input
-                                    type="radio"
-                                    value="approved"
-                                    {...register("status")}
-                                    className="mr-2"
-                                />
-                                Approved
-                            </label>
-                            <label className={`flex items-center px-4 py-2 rounded-md border ${formStatus === 'canceled' ? 'bg-red-50 border-red-200' : 'bg-white'}`}>
-                                <input
-                                    type="radio"
-                                    value="canceled"
-                                    {...register("status")}
-                                    className="mr-2"
-                                />
-                                Canceled
-                            </label>
-                            <label className={`flex items-center px-4 py-2 rounded-md border ${formStatus === 'expired' ? 'bg-orange-50 border-orange-200' : 'bg-white'}`}>
-                                <input
-                                    type="radio"
-                                    value="expired"
-                                    {...register("status")}
-                                    className="mr-2"
-                                />
-                                Expired
-                            </label>
+                        <p className="font-medium mb-2">Cancel Application</p>
+                        <div className="flex items-center">
+                            <input
+                                type="checkbox"
+                                id="isCanceled"
+                                {...register("isCanceled")}
+                                className="mr-2 h-5 w-5"
+                            />
+                            <label htmlFor="isCanceled">Mark this application as canceled</label>
                         </div>
+                        <p className="text-sm text-gray-500 mt-1">
+                            When an application is canceled, it cannot be used for verification purposes.
+                        </p>
                     </div>
                 </div>
 

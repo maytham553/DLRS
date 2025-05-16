@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { IDPFormData, IDPFormInput, StatusType } from "../../types/idp";
+import { IDPFormData, IDPFormInput } from "../../types/idp";
 import { generateIdpId, generateImageId } from "../../utils/idGenerator";
 import { addIdpApplication, uploadFile } from "../../services/firebase";
 import { FileUpload } from "../../components/FileUpload";
@@ -48,7 +48,7 @@ export const IDPApplication = () => {
         handleSubmit,
         formState: { errors },
         watch
-    } = useForm<IDPFormInput & { status: StatusType }>({
+    } = useForm<IDPFormInput>({
         defaultValues: {
             id: idpId,
             name: "Maytham",
@@ -72,7 +72,7 @@ export const IDPApplication = () => {
             personalPhoto: null,
             licenseFrontPhoto: null,
             licenseBackPhoto: null,
-            status: "approved" // Default status is 'approved'
+            isCanceled: false // Default is not canceled
         },
     });
 
@@ -253,7 +253,7 @@ export const IDPApplication = () => {
                 personalPhoto: personalPhotoUrl!,
                 licenseFrontPhoto: licenseFrontPhotoUrl!,
                 licenseBackPhoto: licenseBackPhotoUrl!,
-                status: "approved", // Ensure status is set to approved
+                isCanceled: false, // New applications are not canceled
                 expiryDate: expiryDate ? {
                     seconds: Math.floor(expiryDate.getTime() / 1000),
                     nanoseconds: 0

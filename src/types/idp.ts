@@ -2,7 +2,6 @@ export type Duration = "1 YEAR - $50" | "3 YEAR - $70" | "5 YEAR - $115" | "10 Y
 export type Gender = "Male" | "Female";
 export type LicenseClass = "A" | "B" | "C" | "D" | "E";
 export type RequestIdCard = "Yes" | "No";
-export type StatusType = "approved" | "canceled" | "expired";
 
 export interface IDPFormData {
   id: string;
@@ -25,7 +24,7 @@ export interface IDPFormData {
   residenceCountry: string;
   duration: Duration;
   requestIdCard: RequestIdCard;
-  status?: StatusType;
+  isCanceled?: boolean; // Flag that can be set by admin
   createdAt?: { seconds: number; nanoseconds: number };
   expiryDate?: { seconds: number; nanoseconds: number };
   issueDate?: { seconds: number; nanoseconds: number };
