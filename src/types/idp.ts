@@ -27,6 +27,7 @@ export interface IDPFormData {
   requestIdCard: RequestIdCard;
   status?: StatusType;
   createdAt?: { seconds: number; nanoseconds: number };
+  expiryDate?: { seconds: number; nanoseconds: number };
 
   personalPhoto?: string;
   licenseFrontPhoto?: string;

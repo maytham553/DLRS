@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IDPFormData, IDPFormInput, StatusType } from "../../types/idp";
 import { generateIdpId, generateImageId } from "../../utils/idGenerator";
 import { addIdpApplication, uploadFile } from "../../services/firebase";
@@ -11,6 +11,7 @@ export const IDPApplication = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [idpId] = useState(generateIdpId());
+    const [expiryDate, setExpiryDate] = useState<Date | null>(null);
 
     // State for upload progress
     const [personalPhotoProgress, setPersonalPhotoProgress] = useState(0);
@@ -45,6 +46,7 @@ export const IDPApplication = () => {
         register,
         handleSubmit,
         formState: { errors },
+        watch
     } = useForm<IDPFormInput & { status: StatusType }>({
         defaultValues: {
             id: idpId,
@@ -74,6 +76,32 @@ export const IDPApplication = () => {
     });
 
     const navigate = useNavigate();
+
+    // Calculate expiry date based on duration
+    const calculateExpiryDate = (durationString: string): Date => {
+        const now = new Date();
+        const result = new Date(now);
+        
+        if (durationString.includes("1 YEAR")) {
+            result.setFullYear(now.getFullYear() + 1);
+        } else if (durationString.includes("3 YEAR")) {
+            result.setFullYear(now.getFullYear() + 3);
+        } else if (durationString.includes("5 YEAR")) {
+            result.setFullYear(now.getFullYear() + 5);
+        } else if (durationString.includes("10 YEAR")) {
+            result.setFullYear(now.getFullYear() + 10);
+        }
+        
+        return result;
+    };
+
+    // Watch for duration changes and update expiry date
+    const selectedDuration = watch("duration");
+    useEffect(() => {
+        if (selectedDuration) {
+            setExpiryDate(calculateExpiryDate(selectedDuration));
+        }
+    }, [selectedDuration]);
 
     // Upload a single file and update state
     const uploadSingleFile = async (
@@ -224,7 +252,11 @@ export const IDPApplication = () => {
                 personalPhoto: personalPhotoUrl!,
                 licenseFrontPhoto: licenseFrontPhotoUrl!,
                 licenseBackPhoto: licenseBackPhotoUrl!,
-                status: "approved" // Ensure status is set to approved
+                status: "approved", // Ensure status is set to approved
+                expiryDate: expiryDate ? {
+                    seconds: Math.floor(expiryDate.getTime() / 1000),
+                    nanoseconds: 0
+                } : undefined
             };
 
             // Submit form data to Firestore
@@ -613,6 +645,11 @@ export const IDPApplication = () => {
                             </div>
                             {errors.duration && (
                                 <p className="text-red-500 text-sm">{errors.duration.message}</p>
+                            )}
+                            {expiryDate && (
+                                <p className="text-green-600 text-sm mt-2">
+                                    Expires on: {expiryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                </p>
                             )}
                         </div>
 
