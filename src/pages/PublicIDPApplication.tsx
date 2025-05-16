@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { IDPFormData, IDPFormInput, StatusType } from "../types/idp";
 import { generateIdpId } from "../utils/idGenerator";
-import { addIdpApplication, uploadFile } from "../services/firebase";
-import { FileUpload } from "../components/FileUpload";
+import { addIdpApplication } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
 
 const PublicIDPApplication = () => {
@@ -17,204 +16,16 @@ const PublicIDPApplication = () => {
         handleSubmit,
         setValue,
         formState: { errors, isSubmitting }
-    } = useForm<IDPFormInput>({
-        defaultValues: {
-            id: idpId,
-            name: "John Doe",
-            familyName: "Doe",
-            phoneNumber: "+1234567890",
-            gender: "Male",
-            birthDate: "1990-01-01",
-            birthPlace: "City, Country",
-            licenseNumber: "ABC123456",
-            licenseClass: "A",
-            issuerCountry: "Country",
-            addressLine1: "123 Main St",
-            addressLine2: "Apt 4B",
-            city: "Metropolis",
-            state: "State",
-            zipCode: "12345",
-            country: "Country",
-            residenceCountry: "Country",
-            duration: "1 year",
-            requestIdCard: "No",
-            personalPhoto: null,
-            licenseFrontPhoto: null,
-            licenseBackPhoto: null
-        }
-    });
+    } = useForm<IDPFormInput>();
 
     // Form state
     const [error, setError] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [whatsappReady, setWhatsappReady] = useState(false);
     const [applicationData, setApplicationData] = useState<any | null>(null);
-
-    // Photo upload states
-    const [personalPhotoUrl, setPersonalPhotoUrl] = useState<string | null>(null);
-    const [licenseFrontPhotoUrl, setLicenseFrontPhotoUrl] = useState<string | null>(null);
-    const [licenseBackPhotoUrl, setLicenseBackPhotoUrl] = useState<string | null>(null);
-
-    const [personalPhotoProgress, setPersonalPhotoProgress] = useState(0);
-    const [licenseFrontPhotoProgress, setLicenseFrontPhotoProgress] = useState(0);
-    const [licenseBackPhotoProgress, setLicenseBackPhotoProgress] = useState(0);
-
-    const [personalPhotoPreview, setPersonalPhotoPreview] = useState<string | undefined>(undefined);
-    const [licenseFrontPhotoPreview, setLicenseFrontPhotoPreview] = useState<string | undefined>(undefined);
-    const [licenseBackPhotoPreview, setLicenseBackPhotoPreview] = useState<string | undefined>(undefined);
-
-    const [uploading, setUploading] = useState({
-        personalPhoto: false,
-        licenseFrontPhoto: false,
-        licenseBackPhoto: false
-    });
-
-    const [photoErrors, setPhotoErrors] = useState({
-        personalPhoto: "",
-        licenseFrontPhoto: "",
-        licenseBackPhoto: ""
-    });
-
-    // Handle file uploads
-    const uploadSingleFile = async (
-        file: File,
-        path: string,
-        progressSetter: React.Dispatch<React.SetStateAction<number>>,
-        urlSetter: React.Dispatch<React.SetStateAction<string | null>>,
-        previewSetter: React.Dispatch<React.SetStateAction<string | undefined>>,
-        uploadType: keyof typeof uploading
-    ) => {
-        // Set upload status
-        setUploading(prev => ({ ...prev, [uploadType]: true }));
-
-        // Clear any previous errors
-        setPhotoErrors(prev => ({ ...prev, [uploadType]: "" }));
-
-        try {
-            // Create a preview
-            const reader = new FileReader();
-            reader.onload = () => {
-                previewSetter(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-
-            // Upload to Firebase
-            const downloadUrl = await uploadFile(file, path, progressSetter);
-            urlSetter(downloadUrl);
-            return downloadUrl;
-        } catch (error) {
-            console.error(`Error uploading ${uploadType}:`, error);
-            setPhotoErrors(prev => ({
-                ...prev,
-                [uploadType]: `Failed to upload image: ${error instanceof Error ? error.message : 'Unknown error'}`
-            }));
-            return null;
-        } finally {
-            setUploading(prev => ({ ...prev, [uploadType]: false }));
-        }
-    };
-
-    // Handle file selection
-    const handlePersonalPhotoSelect = (file: File | null) => {
-        if (file) {
-            uploadSingleFile(
-                file,
-                `idp_applications/personal_${generateIdpId()}`,
-                setPersonalPhotoProgress,
-                setPersonalPhotoUrl,
-                setPersonalPhotoPreview,
-                "personalPhoto"
-            );
-        } else {
-            // Clear preview and URL if file is removed
-            setPersonalPhotoPreview(undefined);
-            setPersonalPhotoUrl(null);
-            setPersonalPhotoProgress(0);
-        }
-    };
-
-    const handleLicenseFrontPhotoSelect = (file: File | null) => {
-        if (file) {
-            uploadSingleFile(
-                file,
-                `idp_applications/license_front_${generateIdpId()}`,
-                setLicenseFrontPhotoProgress,
-                setLicenseFrontPhotoUrl,
-                setLicenseFrontPhotoPreview,
-                "licenseFrontPhoto"
-            );
-        } else {
-            // Clear preview and URL if file is removed
-            setLicenseFrontPhotoPreview(undefined);
-            setLicenseFrontPhotoUrl(null);
-            setLicenseFrontPhotoProgress(0);
-        }
-    };
-
-    const handleLicenseBackPhotoSelect = (file: File | null) => {
-        if (file) {
-            uploadSingleFile(
-                file,
-                `idp_applications/license_back_${generateIdpId()}`,
-                setLicenseBackPhotoProgress,
-                setLicenseBackPhotoUrl,
-                setLicenseBackPhotoPreview,
-                "licenseBackPhoto"
-            );
-        } else {
-            // Clear preview and URL if file is removed
-            setLicenseBackPhotoPreview(undefined);
-            setLicenseBackPhotoUrl(null);
-            setLicenseBackPhotoProgress(0);
-        }
-    };
-
-    // Validate all required photos
-    const validatePhotos = (): boolean => {
-        let isValid = true;
-        const newErrors = { ...photoErrors };
-
-        if (!personalPhotoUrl) {
-            newErrors.personalPhoto = "Personal photo is required";
-            isValid = false;
-        }
-
-        if (!licenseFrontPhotoUrl) {
-            newErrors.licenseFrontPhoto = "License front photo is required";
-            isValid = false;
-        }
-
-        if (!licenseBackPhotoUrl) {
-            newErrors.licenseBackPhoto = "License back photo is required";
-            isValid = false;
-        }
-
-        setPhotoErrors(newErrors);
-        return isValid;
-    };
-
     const onSubmit: SubmitHandler<IDPFormInput> = async (data) => {
-        // Check if any uploads are in progress
-        if (uploading.personalPhoto || uploading.licenseFrontPhoto || uploading.licenseBackPhoto) {
-            setError("Please wait for all file uploads to complete before submitting");
-            return;
-        }
-
-        // Validate that all photos have been uploaded
-        if (!validatePhotos()) {
-            return;
-        }
-
         setError(null);
 
         try {
-            // Prepare data with photo URLs for Firestore
-            const photoUrls = {
-                personalPhoto: personalPhotoUrl!,
-                licenseFrontPhoto: licenseFrontPhotoUrl!,
-                licenseBackPhoto: licenseBackPhotoUrl!
-            };
-
             // Create timestamp for Firestore
             const timestamp = {
                 seconds: Math.floor(Date.now() / 1000),
@@ -225,24 +36,12 @@ const PublicIDPApplication = () => {
                 ...data,
                 id: idpId,
                 status: "Pending" as StatusType,
-                personalPhoto: photoUrls.personalPhoto,
-                licenseFrontPhoto: photoUrls.licenseFrontPhoto,
-                licenseBackPhoto: photoUrls.licenseBackPhoto,
                 createdAt: timestamp
             };
 
             // Save application data for WhatsApp
             setApplicationData(formData);
 
-            // Submit form data to Firestore
-            const result = await addIdpApplication(formData);
-
-            if (result.error) {
-                throw new Error("Failed to submit application");
-            }
-
-            // Show success message and WhatsApp button
-            setSuccessMessage("Your application has been submitted successfully!");
             setWhatsappReady(true);
 
         } catch (err) {
@@ -269,47 +68,36 @@ const PublicIDPApplication = () => {
         };
 
         const message = `
-🔷 *NEW IDP APPLICATION* 🔷
-
-*Application Details:*
-📋 ID: ${applicationData.id}
-📅 Date: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+Date: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
 
 *Personal Information:*
-👤 Name: ${applicationData.name} ${applicationData.familyName}
-📱 Phone: ${applicationData.phoneNumber}
-⚧ Gender: ${applicationData.gender}
-🎂 Birth Date: ${formatDate(applicationData.birthDate)}
-🌍 Birth Place: ${applicationData.birthPlace}
+Name: ${applicationData.name} ${applicationData.familyName}
+Phone: ${applicationData.phoneNumber}
+Country Code: ${applicationData.countryCode}
+Gender: ${applicationData.gender}
+Birth Date: ${formatDate(applicationData.birthDate)}
+Birth Place: ${applicationData.birthPlace}
 
 *License Information:*
-🪪 License Number: ${applicationData.licenseNumber}
-🔠 License Class: ${applicationData.licenseClass}
-🏳️ Issuer Country: ${applicationData.issuerCountry}
+License Number: ${applicationData.licenseNumber}
+License Class: ${applicationData.licenseClass}
+Issuer Country: ${applicationData.issuerCountry}
 
 *Address Information:*
-📍 Address: ${applicationData.addressLine1}${applicationData.addressLine2 ? ', ' + applicationData.addressLine2 : ''}
-🏙️ City: ${applicationData.city}
-🏙️ State: ${applicationData.state}
-📮 Zip Code: ${applicationData.zipCode}
-🌐 Country: ${applicationData.country}
-🏠 Country of Residence: ${applicationData.residenceCountry}
+Address Line1: ${applicationData.addressLine1}
+Address Line2: ${applicationData.addressLine2 || "N/A"}
+City: ${applicationData.city}
+State: ${applicationData.state}
+Zip Code: ${applicationData.zipCode}
+Country: ${applicationData.country}
+Country of Residence: ${applicationData.residenceCountry}
 
 *IDP Options:*
-⏱️ Duration: ${applicationData.duration}
-💳 ID Card Requested: ${applicationData.requestIdCard}
-
-*Application Photos:*
-To view the application photos, please visit the links below:
-👤 Personal Photo: ${applicationData.personalPhoto}
-🪪 License Front: ${applicationData.licenseFrontPhoto}
-🪪 License Back: ${applicationData.licenseBackPhoto}
-
-Application status: PENDING
-
-Thank you for your application!
+Duration: ${applicationData.duration}
+ID Card Requested: ${applicationData.requestIdCard}
 `;
 
+        console.log("WhatsApp Message:", message);
         return encodeURIComponent(message);
     };
 
@@ -317,7 +105,7 @@ Thank you for your application!
         if (!applicationData) return;
 
         // Use the user's phone number if available, otherwise use a default
-        const targetPhone = "966505050505"; // Replace with your actual business WhatsApp number
+        const targetPhone = "+9647811235937";
         const message = formatWhatsAppMessage();
 
         // Open WhatsApp with the pre-filled message
@@ -326,7 +114,7 @@ Thank you for your application!
 
     return (
         <div className="container mx-auto py-8 px-4">
-            {successMessage ? (
+            {whatsappReady ? (
                 <div className="text-center p-8 bg-white rounded-lg shadow-sm border border-gray-200">
                     <div className="mb-6">
                         <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 text-green-500 rounded-full mb-4">
@@ -378,11 +166,6 @@ Thank you for your application!
                         </div>
                     )}
 
-                    {successMessage && !whatsappReady && (
-                        <div className="mb-4 p-4 bg-green-50 border border-green-300 text-green-700 rounded">
-                            {successMessage}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                         {/* Personal Information Section */}
@@ -423,22 +206,115 @@ Thank you for your application!
                                     <label htmlFor="phoneNumber" className="block font-medium">
                                         WhatsApp Number *
                                     </label>
-                                    <input
-                                        id="phoneNumber"
-                                        type="text"
-                                        placeholder="e.g. 966505050505"
-                                        {...register("phoneNumber", {
-                                            required: "WhatsApp number is required",
-                                            minLength: { value: 10, message: "Phone number must be at least 10 digits" },
-                                            maxLength: { value: 15, message: "Phone number must not exceed 15 digits" },
-                                            pattern: { value: /^\d+$/, message: "Phone number must contain only digits" }
-                                        })}
-                                        className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                                    />
+                                    <div className="flex">
+                                        <select
+                                            id="countryCode"
+                                            className="p-2 border rounded-l focus:ring-2 focus:ring-blue-500 border-r-0"
+                                            onChange={(e) => {
+                                                const code = e.target.value;
+                                                setValue("countryCode", code);
+                                            }}
+                                        >
+                                            <option value="964">+964 (Iraq)</option>
+                                            <option value="1">+1 (USA/Canada)</option>
+                                            <option value="7">+7 (Russia)</option>
+                                            <option value="20">+20 (Egypt)</option>
+                                            <option value="27">+27 (South Africa)</option>
+                                            <option value="30">+30 (Greece)</option>
+                                            <option value="31">+31 (Netherlands)</option>
+                                            <option value="32">+32 (Belgium)</option>
+                                            <option value="33">+33 (France)</option>
+                                            <option value="34">+34 (Spain)</option>
+                                            <option value="36">+36 (Hungary)</option>
+                                            <option value="39">+39 (Italy)</option>
+                                            <option value="40">+40 (Romania)</option>
+                                            <option value="41">+41 (Switzerland)</option>
+                                            <option value="43">+43 (Austria)</option>
+                                            <option value="44">+44 (UK)</option>
+                                            <option value="45">+45 (Denmark)</option>
+                                            <option value="46">+46 (Sweden)</option>
+                                            <option value="47">+47 (Norway)</option>
+                                            <option value="48">+48 (Poland)</option>
+                                            <option value="49">+49 (Germany)</option>
+                                            <option value="51">+51 (Peru)</option>
+                                            <option value="52">+52 (Mexico)</option>
+                                            <option value="54">+54 (Argentina)</option>
+                                            <option value="55">+55 (Brazil)</option>
+                                            <option value="56">+56 (Chile)</option>
+                                            <option value="57">+57 (Colombia)</option>
+                                            <option value="58">+58 (Venezuela)</option>
+                                            <option value="60">+60 (Malaysia)</option>
+                                            <option value="61">+61 (Australia)</option>
+                                            <option value="62">+62 (Indonesia)</option>
+                                            <option value="63">+63 (Philippines)</option>
+                                            <option value="64">+64 (New Zealand)</option>
+                                            <option value="65">+65 (Singapore)</option>
+                                            <option value="66">+66 (Thailand)</option>
+                                            <option value="81">+81 (Japan)</option>
+                                            <option value="82">+82 (South Korea)</option>
+                                            <option value="84">+84 (Vietnam)</option>
+                                            <option value="86">+86 (China)</option>
+                                            <option value="90">+90 (Turkey)</option>
+                                            <option value="91">+91 (India)</option>
+                                            <option value="92">+92 (Pakistan)</option>
+                                            <option value="93">+93 (Afghanistan)</option>
+                                            <option value="94">+94 (Sri Lanka)</option>
+                                            <option value="95">+95 (Myanmar)</option>
+                                            <option value="98">+98 (Iran)</option>
+                                            <option value="212">+212 (Morocco)</option>
+                                            <option value="213">+213 (Algeria)</option>
+                                            <option value="216">+216 (Tunisia)</option>
+                                            <option value="218">+218 (Libya)</option>
+                                            <option value="220">+220 (Gambia)</option>
+                                            <option value="221">+221 (Senegal)</option>
+                                            <option value="222">+222 (Mauritania)</option>
+                                            <option value="223">+223 (Mali)</option>
+                                            <option value="234">+234 (Nigeria)</option>
+                                            <option value="249">+249 (Sudan)</option>
+                                            <option value="254">+254 (Kenya)</option>
+                                            <option value="256">+256 (Uganda)</option>
+                                            <option value="260">+260 (Zambia)</option>
+                                            <option value="263">+263 (Zimbabwe)</option>
+                                            <option value="351">+351 (Portugal)</option>
+                                            <option value="352">+352 (Luxembourg)</option>
+                                            <option value="353">+353 (Ireland)</option>
+                                            <option value="358">+358 (Finland)</option>
+                                            <option value="359">+359 (Bulgaria)</option>
+                                            <option value="380">+380 (Ukraine)</option>
+                                            <option value="420">+420 (Czech Republic)</option>
+                                            <option value="421">+421 (Slovakia)</option>
+                                            <option value="961">+961 (Lebanon)</option>
+                                            <option value="962">+962 (Jordan)</option>
+                                            <option value="963">+963 (Syria)</option>
+                                            <option value="964">+964 (Iraq)</option>
+                                            <option value="965">+965 (Kuwait)</option>
+                                            <option value="966">+966 (Saudi Arabia)</option>
+                                            <option value="967">+967 (Yemen)</option>
+                                            <option value="968">+968 (Oman)</option>
+                                            <option value="970">+970 (Palestine)</option>
+                                            <option value="971">+971 (UAE)</option>
+                                            <option value="973">+973 (Bahrain)</option>
+                                            <option value="974">+974 (Qatar)</option>
+                                            <option value="975">+975 (Bhutan)</option>
+                                            <option value="976">+976 (Mongolia)</option>
+                                            <option value="977">+977 (Nepal)</option>
+                                            <option value="994">+994 (Azerbaijan)</option>
+                                            <option value="995">+995 (Georgia)</option>
+                                            <option value="998">+998 (Uzbekistan)</option>
+                                        </select>
+                                        <input
+                                            id="phoneNumber"
+                                            type="text"
+                                            {...register("phoneNumber", {
+                                                required: "WhatsApp number is required",
+                                            })}
+                                            className="flex-1 p-2 border rounded-r focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
                                     {errors.phoneNumber && (
                                         <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>
                                     )}
-                                    <p className="text-xs text-gray-500">Please include country code (e.g. 966 for Saudi Arabia)</p>
+                                    <p className="text-xs text-gray-500">Select a country code and enter your phone number</p>
                                 </div>
 
                                 <div className="space-y-2">
@@ -488,17 +364,6 @@ Thank you for your application!
                                     )}
                                 </div>
 
-                                {/* Personal Photo */}
-                                <div className="col-span-2">
-                                    <FileUpload
-                                        id="personalPhoto"
-                                        label="Recent Passport-style Photo"
-                                        onFileSelect={handlePersonalPhotoSelect}
-                                        uploadProgress={personalPhotoProgress}
-                                        previewUrl={personalPhotoPreview}
-                                        error={photoErrors.personalPhoto}
-                                    />
-                                </div>
                             </div>
                         </div>
 
@@ -554,29 +419,6 @@ Thank you for your application!
                                     {errors.issuerCountry && (
                                         <p className="text-red-500 text-sm">{errors.issuerCountry.message}</p>
                                     )}
-                                </div>
-                            </div>
-
-                            {/* License Photos */}
-                            <div className="mt-6">
-                                <h3 className="font-medium mb-4">License Photos</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <FileUpload
-                                        id="licenseFrontPhoto"
-                                        label="License Front Photo"
-                                        onFileSelect={handleLicenseFrontPhotoSelect}
-                                        uploadProgress={licenseFrontPhotoProgress}
-                                        previewUrl={licenseFrontPhotoPreview}
-                                        error={photoErrors.licenseFrontPhoto}
-                                    />
-                                    <FileUpload
-                                        id="licenseBackPhoto"
-                                        label="License Back Photo"
-                                        onFileSelect={handleLicenseBackPhotoSelect}
-                                        uploadProgress={licenseBackPhotoProgress}
-                                        previewUrl={licenseBackPhotoPreview}
-                                        error={photoErrors.licenseBackPhoto}
-                                    />
                                 </div>
                             </div>
                         </div>
@@ -746,14 +588,11 @@ Thank you for your application!
                         <div className="flex justify-end">
                             <button
                                 type="submit"
-                                disabled={isSubmitting || uploading.personalPhoto || uploading.licenseFrontPhoto || uploading.licenseBackPhoto}
+                                disabled={isSubmitting}
                                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300"
                             >
                                 {isSubmitting
-                                    ? "Submitting..."
-                                    : uploading.personalPhoto || uploading.licenseFrontPhoto || uploading.licenseBackPhoto
-                                        ? "Uploading..."
-                                        : "Submit Application"
+                                    ? "Submitting..." : "Submit Application"
                                 }
                             </button>
                         </div>

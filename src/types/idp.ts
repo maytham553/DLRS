@@ -8,6 +8,7 @@ export interface IDPFormData {
   id: string;
   name: string;
   familyName: string;
+  countryCode: string;
   phoneNumber: string;
   gender: Gender;
   birthDate: string;
@@ -24,9 +25,6 @@ export interface IDPFormData {
   residenceCountry: string;
   duration: Duration;
   requestIdCard: RequestIdCard;
-  personalPhoto: string;
-  licenseFrontPhoto: string;
-  licenseBackPhoto: string;
   status?: StatusType;
   createdAt?: { seconds: number; nanoseconds: number };
 }
