@@ -4,6 +4,7 @@ import { IDPFormData, IDPFormInput, StatusType } from "../../types/idp";
 import { generateIdpId, generateImageId } from "../../utils/idGenerator";
 import { addIdpApplication, uploadFile } from "../../services/firebase";
 import { FileUpload } from "../../components/FileUpload";
+import CountrySelect from "../../components/CountrySelect";
 import { useNavigate } from "react-router-dom";
 
 export const IDPApplication = () => {
@@ -354,15 +355,12 @@ export const IDPApplication = () => {
                             <label htmlFor="birthPlace" className="block font-medium">
                                 Birth Place *
                             </label>
-                            <input
+                            <CountrySelect
                                 id="birthPlace"
-                                type="text"
-                                {...register("birthPlace", { required: "Birth place is required", maxLength: 100 })}
-                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                                {...register("birthPlace", { required: "Birth place is required" })}
+                                required
+                                error={errors.birthPlace?.message}
                             />
-                            {errors.birthPlace && (
-                                <p className="text-red-500 text-sm">{errors.birthPlace.message}</p>
-                            )}
                         </div>
 
                         {/* Personal Photo */}
@@ -422,15 +420,12 @@ export const IDPApplication = () => {
                             <label htmlFor="issuerCountry" className="block font-medium">
                                 Issuer Country *
                             </label>
-                            <input
+                            <CountrySelect
                                 id="issuerCountry"
-                                type="text"
-                                {...register("issuerCountry", { required: "Issuer country is required", maxLength: 100 })}
-                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                                {...register("issuerCountry", { required: "Issuer country is required" })}
+                                required
+                                error={errors.issuerCountry?.message}
                             />
-                            {errors.issuerCountry && (
-                                <p className="text-red-500 text-sm">{errors.issuerCountry.message}</p>
-                            )}
                         </div>
                     </div>
 
@@ -549,30 +544,24 @@ export const IDPApplication = () => {
                                 <label htmlFor="country" className="block font-medium">
                                     Country *
                                 </label>
-                                <input
+                                <CountrySelect
                                     id="country"
-                                    type="text"
-                                    {...register("country", { required: "Country is required", maxLength: 50 })}
-                                    className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                                    {...register("country", { required: "Country is required" })}
+                                    required
+                                    error={errors.country?.message}
                                 />
-                                {errors.country && (
-                                    <p className="text-red-500 text-sm">{errors.country.message}</p>
-                                )}
                             </div>
 
                             <div className="space-y-2">
                                 <label htmlFor="residenceCountry" className="block font-medium">
                                     Country of Residence *
                                 </label>
-                                <input
+                                <CountrySelect
                                     id="residenceCountry"
-                                    type="text"
-                                    {...register("residenceCountry", { required: "Country of residence is required", maxLength: 50 })}
-                                    className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                                    {...register("residenceCountry", { required: "Country of residence is required" })}
+                                    required
+                                    error={errors.residenceCountry?.message}
                                 />
-                                {errors.residenceCountry && (
-                                    <p className="text-red-500 text-sm">{errors.residenceCountry.message}</p>
-                                )}
                             </div>
                         </div>
                     </div>
