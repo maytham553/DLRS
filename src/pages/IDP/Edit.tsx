@@ -60,7 +60,7 @@ export const IDPEdit = () => {
             birthDate: "",
             birthPlace: "",
             licenseNumber: "",
-            licenseClass: "A",
+            licenseClass: [],
             issuerCountry: "",
             addressLine1: "",
             addressLine2: "",
@@ -268,7 +268,7 @@ export const IDPEdit = () => {
         return isValid;
     };
 
-    const onSubmit: SubmitHandler<IDPFormInput & { status: StatusType }> = async (data) => {
+    const onSubmit: SubmitHandler<any> = async (data) => {
         if (!id) return;
 
         // Check if any uploads are in progress

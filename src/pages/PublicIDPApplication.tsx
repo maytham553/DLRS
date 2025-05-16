@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import CountrySelect from "../components/CountrySelect";
-import { IDPFormData, IDPFormInput, StatusType } from "../types/idp";
+import { IDPFormInput, StatusType } from "../types/idp";
 import { generateIdpId } from "../utils/idGenerator";
-import { addIdpApplication } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
 
 const PublicIDPApplication = () => {
@@ -38,7 +37,7 @@ const PublicIDPApplication = () => {
                 data.licenseClass = [data.licenseClass];
             }
 
-            const formData: IDPFormData = {
+            const formData: any = {
                 ...data,
                 id: idpId,
                 status: "Pending" as StatusType,

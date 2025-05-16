@@ -54,7 +54,7 @@ export const IDPApplication = () => {
             birthDate: "1990-01-01",
             birthPlace: "Saudi Arabia",
             licenseNumber: "1234567890",
-            licenseClass: "A",
+            licenseClass: [],
             issuerCountry: "Saudi Arabia",
             addressLine1: "123 Main St",
             addressLine2: "Apt 1",
@@ -201,7 +201,7 @@ export const IDPApplication = () => {
         return isValid;
     };
 
-    const onSubmit: SubmitHandler<IDPFormInput & { status: StatusType }> = async (data) => {
+    const onSubmit: SubmitHandler<any> = async (data) => {
         // Check if any uploads are in progress
         if (uploading.personalPhoto || uploading.licenseFrontPhoto || uploading.licenseBackPhoto) {
             setError("Please wait for all file uploads to complete before submitting");
