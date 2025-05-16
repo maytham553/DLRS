@@ -27,9 +27,9 @@ const getStatusDisplay = (application: IDPFormData): { text: string; className: 
         }
     }
     
-    // Default to approved
+    // Default to active
     return {
-        text: 'APPROVED',
+        text: 'ACTIVE',
         className: 'bg-green-100 text-green-700'
     };
 };

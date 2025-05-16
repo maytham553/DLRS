@@ -350,7 +350,7 @@ export const IDPEdit = () => {
                     <h2 className="text-xl font-semibold mb-4">IDP Status</h2>
                     <div className="flex items-center mb-4">
                         <div className={`px-3 py-1 rounded-full text-xs font-medium mr-3 ${hasExpired ? 'bg-orange-100 text-orange-800' : (isCanceled ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800')}`}>
-                            {isCanceled ? 'CANCELED' : (hasExpired ? 'EXPIRED' : 'APPROVED')}
+                            {isCanceled ? 'CANCELED' : (hasExpired ? 'EXPIRED' : 'ACTIVE')}
                         </div>
                         {hasExpired && !isCanceled && (
                             <div className="text-xs text-orange-500">
