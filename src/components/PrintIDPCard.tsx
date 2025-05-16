@@ -271,8 +271,8 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                                 <p><span className="text-gray-500">Adderss</span></p>
                                                 <p><span className="font-medium text-sm">{application.addressLine1}</span></p>
                                                 <p><span className="text-gray-500">Original ID</span> <span className="font-medium text-sm">{application.licenseNumber}</span></p>
-                                                <p><span className="text-gray-500">Issue Date</span> <span className="font-medium text-sm">TODO</span></p>
-                                                <p><span className="text-gray-500">Expiry Date</span> <span className="font-medium text-sm">TODO</span></p>
+                                                <p><span className="text-gray-500">Issue Date</span> <span className="font-medium text-sm">{application.issueDate ? new Date((application.issueDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
+                                                <p><span className="text-gray-500">Expiry Date</span> <span className="font-medium text-sm">{application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
                                             </div>                                           
                                         </div>
                                         

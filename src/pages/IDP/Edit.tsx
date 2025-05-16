@@ -69,7 +69,7 @@ export const IDPEdit = () => {
             zipCode: "",
             country: "",
             residenceCountry: "",
-            duration: "1 year",
+            duration: "1 YEAR - $50",
             requestIdCard: "No",
             personalPhoto: null,
             licenseFrontPhoto: null,
@@ -124,10 +124,21 @@ export const IDPEdit = () => {
                     if (data.createdAt) {
                         const issueDate = new Date((data.createdAt as any).seconds * 1000);
                         const expirationDate = new Date(issueDate);
-                        if (data.duration === "1 year") {
+                        if (data.duration.includes("1 YEAR")) {
                             expirationDate.setFullYear(issueDate.getFullYear() + 1);
-                        } else {
+                        } else if (data.duration.includes("3 YEAR")) {
                             expirationDate.setFullYear(issueDate.getFullYear() + 3);
+                        } else if (data.duration.includes("5 YEAR")) {
+                            expirationDate.setFullYear(issueDate.getFullYear() + 5);
+                        } else if (data.duration.includes("10 YEAR")) {
+                            expirationDate.setFullYear(issueDate.getFullYear() + 10);
+                        } else {
+                            // Legacy format handling
+                            if (data.duration === "1 year") {
+                                expirationDate.setFullYear(issueDate.getFullYear() + 1);
+                            } else if (data.duration === "3 years") {
+                                expirationDate.setFullYear(issueDate.getFullYear() + 3);
+                            }
                         }
                         setHasExpired(new Date() > expirationDate);
                     }
@@ -529,20 +540,27 @@ export const IDPEdit = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="licenseClass" className="block font-medium">
-                                License Class *
+                            <label className="block font-medium">
+                                License Class * (Select all that apply)
                             </label>
-                            <select
-                                id="licenseClass"
-                                {...register("licenseClass", { required: "License class is required" })}
-                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                            </select>
+                            <div className="grid grid-cols-5 gap-4">
+                                {["A", "B", "C", "D", "E"].map((licenseType) => (
+                                    <div key={licenseType} className="border rounded p-4 hover:bg-gray-50">
+                                        <label className="flex flex-col items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                value={licenseType}
+                                                {...register("licenseClass", { 
+                                                    required: "At least one license class is required",
+                                                    validate: value => value.length > 0 || "At least one license class is required"
+                                                })}
+                                                className="h-6 w-6 mb-2"
+                                            />
+                                            <span className="text-center">Class<br/>{licenseType}</span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
                             {errors.licenseClass && (
                                 <p className="text-red-500 text-sm">{errors.licenseClass.message}</p>
                             )}
@@ -711,24 +729,42 @@ export const IDPEdit = () => {
                     <div className="space-y-4">
                         <div>
                             <p className="font-medium mb-2">Duration *</p>
-                            <div className="flex space-x-4">
-                                <label className="flex items-center">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <label className="flex items-center p-3 border rounded hover:bg-gray-50">
                                     <input
                                         type="radio"
-                                        value="1 year"
+                                        value="1 YEAR - $50"
                                         {...register("duration", { required: "Duration is required" })}
                                         className="mr-2"
                                     />
-                                    1 year
+                                    <span>1 YEAR - $50</span>
                                 </label>
-                                <label className="flex items-center">
+                                <label className="flex items-center p-3 border rounded hover:bg-gray-50">
                                     <input
                                         type="radio"
-                                        value="3 years"
+                                        value="3 YEAR - $70"
                                         {...register("duration", { required: "Duration is required" })}
                                         className="mr-2"
                                     />
-                                    3 years
+                                    <span>3 YEAR - $70</span>
+                                </label>
+                                <label className="flex items-center p-3 border rounded hover:bg-gray-50">
+                                    <input
+                                        type="radio"
+                                        value="5 YEAR - $115"
+                                        {...register("duration", { required: "Duration is required" })}
+                                        className="mr-2"
+                                    />
+                                    <span>5 YEAR - $115</span>
+                                </label>
+                                <label className="flex items-center p-3 border rounded hover:bg-gray-50">
+                                    <input
+                                        type="radio"
+                                        value="10 YEAR - $200"
+                                        {...register("duration", { required: "Duration is required" })}
+                                        className="mr-2"
+                                    />
+                                    <span>10 YEAR - $200</span>
                                 </label>
                             </div>
                             {errors.duration && (

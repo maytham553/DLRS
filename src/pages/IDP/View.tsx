@@ -42,11 +42,6 @@ export const IDPView = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [hasExpired, setHasExpired] = useState(false);
-    
-    // Date states for the IDP card
-    const [issueDate, setIssueDate] = useState<Date | null>(null);
-    const [expiryDate, setExpiryDate] = useState<Date | null>(null);
-    
 
     useEffect(() => {
         const fetchApplication = async () => {
@@ -61,19 +56,10 @@ export const IDPView = () => {
                     const data = docSnap.data() as IDPFormData;
                     setApplication(data);
 
-                    // Check if the IDP has expired and set dates for the card
-                    if (data.createdAt) {
-                        const issueDate = new Date((data.createdAt as any).seconds * 1000);
-                        setIssueDate(issueDate);
-                        
-                        const expirationDate = new Date(issueDate);
-                        if (data.duration === "1 year") {
-                            expirationDate.setFullYear(issueDate.getFullYear() + 1);
-                        } else {
-                            expirationDate.setFullYear(issueDate.getFullYear() + 3);
-                        }
-                        setExpiryDate(expirationDate);
-                        setHasExpired(new Date() > expirationDate);
+                    // Check if the IDP has expired
+                    if (data.expiryDate) {
+                        const expiryDate = new Date((data.expiryDate as any).seconds * 1000);
+                        setHasExpired(new Date() > expiryDate);
                     }
                 } else {
                     setError("Application not found");
@@ -150,13 +136,13 @@ export const IDPView = () => {
                         <>
                             <PrintIDPCard
                                 application={application}
-                                issueDate={issueDate}
-                                expiryDate={expiryDate}
+                                issueDate={application.issueDate ? new Date((application.issueDate as any).seconds * 1000) : null}
+                                expiryDate={application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000) : null}
                             />
                             <InternationalDriverLicenseCard
                                 application={application}
-                                issueDate={issueDate}
-                                expiryDate={expiryDate}
+                                issueDate={application.issueDate ? new Date((application.issueDate as any).seconds * 1000) : null}
+                                expiryDate={application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000) : null}
                             />
                         </>
                     )}
@@ -226,7 +212,11 @@ export const IDPView = () => {
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">License Class</p>
-                            <p className="font-medium">{application.licenseClass}</p>
+                            <p className="font-medium">
+                                {Array.isArray(application.licenseClass) 
+                                    ? application.licenseClass.join(", ") 
+                                    : application.licenseClass}
+                            </p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Issuer Country</p>
@@ -281,6 +271,18 @@ export const IDPView = () => {
                         <div>
                             <p className="text-sm text-gray-500">Request ID Card</p>
                             <p className="font-medium">{application.requestIdCard}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Issue Date</p>
+                            <p className="font-medium">
+                                {application.issueDate ? new Date((application.issueDate as any).seconds * 1000).toISOString().split('T')[0] : "Not available"}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Expiry Date</p>
+                            <p className="font-medium">
+                                {application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000).toISOString().split('T')[0] : "Not available"}
+                            </p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-500">Status</p>

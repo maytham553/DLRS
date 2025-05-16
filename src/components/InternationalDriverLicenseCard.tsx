@@ -19,12 +19,12 @@ const InternationalDriverLicenseCard = ({
 
     // Format dates for display
     const formattedIssueDate = issueDate ? 
-        `${issueDate.getDate().toString().padStart(2, '0')}/${(issueDate.getMonth() + 1).toString().padStart(2, '0')}/${issueDate.getFullYear()}` : 
-        'DD/MM/YYYY';
+        `${issueDate.getFullYear()}-${(issueDate.getMonth() + 1).toString().padStart(2, '0')}-${issueDate.getDate().toString().padStart(2, '0')}` : 
+        'YYYY-MM-DD';
     
     const formattedExpiryDate = expiryDate ? 
-        `${expiryDate.getDate().toString().padStart(2, '0')}/${(expiryDate.getMonth() + 1).toString().padStart(2, '0')}/${expiryDate.getFullYear()}` : 
-        'DD/MM/YYYY';
+        `${expiryDate.getFullYear()}-${(expiryDate.getMonth() + 1).toString().padStart(2, '0')}-${expiryDate.getDate().toString().padStart(2, '0')}` : 
+        'YYYY-MM-DD';
 
     // Print handler function
     const handlePrint = () => {
@@ -286,7 +286,7 @@ const InternationalDriverLicenseCard = ({
                                                 <tr>
                                                     <td>
                                                         <span className="label">DOB: </span>
-                                                        <span className="value">{application.birthDate.split('-').reverse().join('/')}</span>
+                                                        <span className="value">{application.birthDate}</span>
                                                     </td>
                                                     <td>
                                                         <span className="label">PLACE: </span>
