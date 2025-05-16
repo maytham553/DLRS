@@ -99,11 +99,23 @@ Country of Residence: ${applicationData.residenceCountry}
 
 *IDP Options:*
 Duration: ${applicationData.duration}
+Price: ${getDurationPrice(applicationData.duration)}
 ID Card Requested: ${applicationData.requestIdCard}
 `;
 
         console.log("WhatsApp Message:", message);
         return encodeURIComponent(message);
+    };
+
+    // Helper function to get the price based on duration
+    const getDurationPrice = (duration: string) => {
+        switch (duration) {
+            case "1 year": return "$50";
+            case "3 years": return "$70";
+            case "5 years": return "$115";
+            case "10 years": return "$200";
+            default: return "Price not available";
+        }
     };
 
     const handleSendToWhatsApp = () => {
@@ -552,24 +564,46 @@ ID Card Requested: ${applicationData.requestIdCard}
                             <div className="space-y-4">
                                 <div>
                                     <p className="font-medium mb-2">Duration *</p>
-                                    <div className="flex space-x-4">
-                                        <label className="flex items-center">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <label className="flex items-center p-3 border rounded hover:bg-gray-50">
                                             <input
                                                 type="radio"
                                                 value="1 year"
                                                 {...register("duration", { required: "Duration is required" })}
                                                 className="mr-2"
                                             />
-                                            1 year
+                                            <span className="flex-1">1 YEAR</span>
+                                            <span className="font-medium text-green-600">$50</span>
                                         </label>
-                                        <label className="flex items-center">
+                                        <label className="flex items-center p-3 border rounded hover:bg-gray-50">
                                             <input
                                                 type="radio"
                                                 value="3 years"
                                                 {...register("duration", { required: "Duration is required" })}
                                                 className="mr-2"
                                             />
-                                            3 years
+                                            <span className="flex-1">3 YEARS</span>
+                                            <span className="font-medium text-green-600">$70</span>
+                                        </label>
+                                        <label className="flex items-center p-3 border rounded hover:bg-gray-50">
+                                            <input
+                                                type="radio"
+                                                value="5 years"
+                                                {...register("duration", { required: "Duration is required" })}
+                                                className="mr-2"
+                                            />
+                                            <span className="flex-1">5 YEARS</span>
+                                            <span className="font-medium text-green-600">$115</span>
+                                        </label>
+                                        <label className="flex items-center p-3 border rounded hover:bg-gray-50">
+                                            <input
+                                                type="radio"
+                                                value="10 years"
+                                                {...register("duration", { required: "Duration is required" })}
+                                                className="mr-2"
+                                            />
+                                            <span className="flex-1">10 YEARS</span>
+                                            <span className="font-medium text-green-600">$200</span>
                                         </label>
                                     </div>
                                     {errors.duration && (
