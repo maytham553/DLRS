@@ -434,20 +434,27 @@ export const IDPApplication = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="licenseClass" className="block font-medium">
-                                License Class *
+                            <label className="block font-medium">
+                                License Class * (Select all that apply)
                             </label>
-                            <select
-                                id="licenseClass"
-                                {...register("licenseClass", { required: "License class is required" })}
-                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                            </select>
+                            <div className="grid grid-cols-5 gap-4">
+                                {["A", "B", "C", "D", "E"].map((licenseType) => (
+                                    <div key={licenseType} className="border rounded p-4 hover:bg-gray-50">
+                                        <label className="flex flex-col items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                value={licenseType}
+                                                {...register("licenseClass", { 
+                                                    required: "At least one license class is required",
+                                                    validate: value => value.length > 0 || "At least one license class is required"
+                                                })}
+                                                className="h-6 w-6 mb-2"
+                                            />
+                                            <span className="text-center">Class<br/>{licenseType}</span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
                             {errors.licenseClass && (
                                 <p className="text-red-500 text-sm">{errors.licenseClass.message}</p>
                             )}
