@@ -59,6 +59,11 @@ export default function Navigation() {
                         <span className="text-lg font-semibold text-foreground">DLRS</span>
                     </Link>
 
+                    {/* Organization Text - Desktop */}
+                    <div className="hidden md:block mr-auto ml-4">
+                        <span className="text-sm font-medium text-foreground/70">NON GOVERNMENT ORGANIZATION</span>
+                    </div>
+
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center gap-1">
                         {links.map((link) => (
