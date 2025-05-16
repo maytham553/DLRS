@@ -1,4 +1,4 @@
-export type Duration = "1 year" | "3 years";
+export type Duration = "1 YEAR - $50" | "3 YEAR - $70" | "5 YEAR - $115" | "10 YEAR - $200";
 export type Gender = "Male" | "Female";
 export type LicenseClass = "A" | "B" | "C" | "D" | "E";
 export type RequestIdCard = "Yes" | "No";

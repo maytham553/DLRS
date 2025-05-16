@@ -63,7 +63,7 @@ export const IDPApplication = () => {
             zipCode: "12345",
             country: "Saudi Arabia",
             residenceCountry: "Saudi Arabia",
-            duration: "1 year",
+            duration: "1 YEAR - $50",
             requestIdCard: "No",
             personalPhoto: null,
             licenseFrontPhoto: null,
@@ -584,24 +584,42 @@ export const IDPApplication = () => {
                     <div className="space-y-4">
                         <div>
                             <p className="font-medium mb-2">Duration *</p>
-                            <div className="flex space-x-4">
-                                <label className="flex items-center">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <label className="flex items-center p-3 border rounded hover:bg-gray-50">
                                     <input
                                         type="radio"
-                                        value="1 year"
+                                        value="1 YEAR - $50"
                                         {...register("duration", { required: "Duration is required" })}
                                         className="mr-2"
                                     />
-                                    1 year
+                                    <span>1 YEAR - $50</span>
                                 </label>
-                                <label className="flex items-center">
+                                <label className="flex items-center p-3 border rounded hover:bg-gray-50">
                                     <input
                                         type="radio"
-                                        value="3 years"
+                                        value="3 YEAR - $70"
                                         {...register("duration", { required: "Duration is required" })}
                                         className="mr-2"
                                     />
-                                    3 years
+                                    <span>3 YEAR - $70</span>
+                                </label>
+                                <label className="flex items-center p-3 border rounded hover:bg-gray-50">
+                                    <input
+                                        type="radio"
+                                        value="5 YEAR - $115"
+                                        {...register("duration", { required: "Duration is required" })}
+                                        className="mr-2"
+                                    />
+                                    <span>5 YEAR - $115</span>
+                                </label>
+                                <label className="flex items-center p-3 border rounded hover:bg-gray-50">
+                                    <input
+                                        type="radio"
+                                        value="10 YEAR - $200"
+                                        {...register("duration", { required: "Duration is required" })}
+                                        className="mr-2"
+                                    />
+                                    <span>10 YEAR - $200</span>
                                 </label>
                             </div>
                             {errors.duration && (
