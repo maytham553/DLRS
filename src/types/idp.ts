@@ -28,6 +28,7 @@ export interface IDPFormData {
   status?: StatusType;
   createdAt?: { seconds: number; nanoseconds: number };
   expiryDate?: { seconds: number; nanoseconds: number };
+  issueDate?: { seconds: number; nanoseconds: number };
 
   personalPhoto?: string;
   licenseFrontPhoto?: string;

@@ -12,6 +12,7 @@ export const IDPApplication = () => {
     const [error, setError] = useState<string | null>(null);
     const [idpId] = useState(generateIdpId());
     const [expiryDate, setExpiryDate] = useState<Date | null>(null);
+    const [issueDate] = useState<Date>(new Date()); // Current date as issue date
 
     // State for upload progress
     const [personalPhotoProgress, setPersonalPhotoProgress] = useState(0);
@@ -256,7 +257,11 @@ export const IDPApplication = () => {
                 expiryDate: expiryDate ? {
                     seconds: Math.floor(expiryDate.getTime() / 1000),
                     nanoseconds: 0
-                } : undefined
+                } : undefined,
+                issueDate: {
+                    seconds: Math.floor(issueDate.getTime() / 1000),
+                    nanoseconds: 0
+                }
             };
 
             // Submit form data to Firestore
@@ -648,9 +653,12 @@ export const IDPApplication = () => {
                             )}
                             {expiryDate && (
                                 <p className="text-green-600 text-sm mt-2">
-                                    Expires on: {expiryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                    Expires on: {expiryDate.toISOString().split('T')[0]}
                                 </p>
                             )}
+                            <p className="text-blue-600 text-sm mt-2">
+                                Issue date: {issueDate.toISOString().split('T')[0]}
+                            </p>
                         </div>
 
                         <div>
