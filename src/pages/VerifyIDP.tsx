@@ -317,6 +317,29 @@ export default function VerifyIDP() {
                     ))}
                 </div>
             </div>
+
+
+            {/* Trusted Car Rental Companies Section */}
+            <div className="w-full my-12 py-10 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
+                <div className="container mx-auto">
+                    <p className="text-lg text-foreground/70 mb-8 max-w-2xl mx-auto text-center">
+                        We advise international driving license users to rent cars from trusted companies.
+                    </p>
+                    
+                    <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 px-4">
+                        <img src="/logos/png-transparent-national-car-rental-enterprise-rent-a-car-budget-rent-a-car-car-rental-text-logo-car.png" alt="Enterprise" className="h-12 md:h-16 object-contain" />
+                        <img src="/logos/Budget-Logo.png" alt="Budget" className="h-12 md:h-16 object-contain" />
+                        <img src="/logos/Thrifty-car-rental-logo.jpg" alt="Thrifty" className="h-12 md:h-16 object-contain" />
+                        <img src="/logos/Hertz_logo.jpg" alt="Hertz" className="h-12 md:h-16 object-contain" />
+                        <img src="/logos/dollar.7a3cc7e0.svg" alt="Dollar" className="h-12 md:h-16 object-contain" />
+                        <img src="/logos/png-transparent-national-car-rental-enterprise-rent-a-car-budget-rent-a-car-car-rental-text-logo-car.png" alt="National" className="h-12 md:h-16 object-contain" />
+                        <img src="/logos/Sixt-Logo.jpg" alt="Sixt" className="h-12 md:h-16 object-contain" />
+                        <img src="/logos/Alamo_Rent_a_Car_(logo).svg.png" alt="Alamo" className="h-12 md:h-16 object-contain" />
+                        <img src="/logos/AVIS_logo_2012.svg.png" alt="Avis" className="h-12 md:h-16 object-contain" />
+                        <img src="/logos/Europcar-Logo.svg.png" alt="Europcar" className="h-12 md:h-16 object-contain" />
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
