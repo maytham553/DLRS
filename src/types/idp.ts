@@ -14,7 +14,7 @@ export interface IDPFormData {
   birthDate: string;
   birthPlace: string;
   licenseNumber: string;
-  licenseClass: LicenseClass;
+  licenseClass: string[]; // Changed from LicenseClass to string[] for multiple selections
   issuerCountry: string;
   addressLine1: string;
   addressLine2?: string;

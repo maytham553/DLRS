@@ -32,6 +32,11 @@ const PublicIDPApplication = () => {
                 nanoseconds: 0
             };
 
+            // Ensure licenseClass is an array
+            if (!Array.isArray(data.licenseClass)) {
+                data.licenseClass = [data.licenseClass];
+            }
+
             const formData: IDPFormData = {
                 ...data,
                 id: idpId,
@@ -80,7 +85,7 @@ Birth Place: ${applicationData.birthPlace}
 
 *License Information:*
 License Number: ${applicationData.licenseNumber}
-License Class: ${applicationData.licenseClass}
+License Class: ${Array.isArray(applicationData.licenseClass) ? applicationData.licenseClass.join(', ') : applicationData.licenseClass}
 Issuer Country: ${applicationData.issuerCountry}
 
 *Address Information:*
@@ -387,20 +392,25 @@ ID Card Requested: ${applicationData.requestIdCard}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label htmlFor="licenseClass" className="block font-medium">
-                                        License Class *
+                                    <label className="block font-medium">
+                                        License Class * (Select all that apply)
                                     </label>
-                                    <select
-                                        id="licenseClass"
-                                        {...register("licenseClass", { required: "License class is required" })}
-                                        className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                                    >
-                                        <option value="A">A</option>
-                                        <option value="B">B</option>
-                                        <option value="C">C</option>
-                                        <option value="D">D</option>
-                                        <option value="E">E</option>
-                                    </select>
+                                    <div className="grid grid-cols-5 gap-2">
+                                        {["A", "B", "C", "D", "E"].map((licenseType) => (
+                                            <label key={licenseType} className="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50">
+                                                <input
+                                                    type="checkbox"
+                                                    value={licenseType}
+                                                    {...register("licenseClass", { 
+                                                        required: "At least one license class is required",
+                                                        validate: value => value.length > 0 || "At least one license class is required"
+                                                    })}
+                                                    className="h-4 w-4"
+                                                />
+                                                <span>Class {licenseType}</span>
+                                            </label>
+                                        ))}
+                                    </div>
                                     {errors.licenseClass && (
                                         <p className="text-red-500 text-sm">{errors.licenseClass.message}</p>
                                     )}
