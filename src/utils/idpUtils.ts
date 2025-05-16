@@ -119,7 +119,7 @@ export const getExpirationDate = (data: IDPFormData): Date | null => {
 };
 
 /**
- * Gets the expiration date as a formatted string
+ * Gets the expiration date as a formatted string in YYYY-MM-DD format
  * @param data The IDP form data
  * @returns A formatted date string or 'Unknown' if no issue date
  */
@@ -130,17 +130,17 @@ export const getFormattedExpirationDate = (data: IDPFormData): string => {
     return "Unknown";
   }
 
-  return expirationDate.toLocaleDateString();
+  return expirationDate.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
 };
 
 /**
- * Gets the issue date (created date) as a formatted string
+ * Gets the issue date (created date) as a formatted string in YYYY-MM-DD format
  * @param data The IDP form data
  * @returns A formatted date string or current date as fallback
  */
 export const getFormattedIssueDate = (data: IDPFormData): string => {
   if (data.createdAt) {
-    return new Date(data.createdAt.seconds * 1000).toLocaleDateString();
+    return new Date(data.createdAt.seconds * 1000).toISOString().split('T')[0]; // Returns YYYY-MM-DD format
   }
-  return new Date().toLocaleDateString();
+  return new Date().toISOString().split('T')[0]; // Returns YYYY-MM-DD format
 };

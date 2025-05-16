@@ -78,7 +78,11 @@ const PrintIcon = () => (
 );
 
 // Extended IDP data type that may include createdAt from Firestore
-type ExtendedIDPFormData = IDPFormData;
+type ExtendedIDPFormData = IDPFormData & {
+    personalPhoto?: string;
+    licenseFrontPhoto?: string;
+    licenseBackPhoto?: string;
+};
 
 export default function VerifyIDP() {
     const [idpId, setIdpId] = useState("");
@@ -392,35 +396,12 @@ export default function VerifyIDP() {
 
             {/* License-Style Results Section */}
             {searched && !error && idpData && (
-                <div className="w-full mt-8 max-w-md mx-auto">
+                <div className="w-full mt-8 max-w mx-auto">
                     <Card className="bg-white rounded-xl overflow-hidden border-0 shadow-lg">
                         {/* Status Bar - Top colored strip */}
                         <div className={`h-1.5 w-full ${getStatusBarClass(idpData)}`}></div>
 
-                        {/* License Header with Print Button */}
-                        <div className="px-6 pt-6 pb-4 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                                <IDPLogo />
-                                <div>
-                                    <h2 className="font-bold text-xl">International Driving Permit</h2>
-                                    <div className="flex items-center mt-1">
-                                        <p className="text-sm text-gray-500">ID: {idpData.id}</p>
-                                        <div className={`ml-3 px-2 py-0.5 text-xs font-medium rounded-full ${getStatusDisplay(idpData).className}`}>
-                                            {getStatusDisplay(idpData).text}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex items-center gap-1"
-                                onClick={handlePrint}
-                            >
-                                <PrintIcon />
-                                <span className="hidden sm:inline">Print</span>
-                            </Button>
-                        </div>
+                        <div className="p-4" />
 
                         {/* Main Content - This will be used for printing */}
                         <div className="p-6 pt-0" ref={printableCardRef}>
@@ -526,9 +507,6 @@ export default function VerifyIDP() {
 
                             {/* Status Badge */}
                             <div className="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center print-footer">
-                                <p className="text-xs text-gray-400 print-verification-date">
-                                    Verified on {new Date().toLocaleDateString()}
-                                </p>
                                 <div className={`
                                     px-3 py-1 rounded-full text-xs font-medium 
                                     ${getVerificationClasses()}
