@@ -42,12 +42,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setError(null);
         try {
             const result = await signIn(email, password);
-            console.log(result);
             if (result.error) {
-                setError(result.error as Error);
+                throw new Error('Invalid email or password');
             }
-        } catch (err) {
+        } catch (err:any) {
             setError(err as Error);
+            throw new Error(err?.message === 'Invalid email or password' ? err.message : 'Login failed');
         }
     };
 

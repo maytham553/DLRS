@@ -13,9 +13,9 @@ export default function Home() {
                     <span className="text-sm font-medium text-primary">Digital License Registration System</span>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
                     Secure Digital Licensing Made <span className="text-primary">Simple</span>
-                </h1>
+                </h2>
 
                 <p className="text-lg text-foreground/70 mb-8 max-w-2xl mx-auto">
                     Welcome to DLRS, the comprehensive solution for digital license registration and management. Secure, efficient, and user-friendly.
