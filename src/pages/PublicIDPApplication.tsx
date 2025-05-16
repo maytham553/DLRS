@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import CountrySelect from "../components/CountrySelect";
 import { IDPFormData, IDPFormInput, StatusType } from "../types/idp";
 import { generateIdpId } from "../utils/idGenerator";
 import { addIdpApplication } from "../services/firebase";
@@ -429,18 +430,13 @@ ID Card Requested: ${applicationData.requestIdCard}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label htmlFor="issuerCountry" className="block font-medium">
-                                        Issuer Country *
-                                    </label>
-                                    <input
+                                    <CountrySelect
                                         id="issuerCountry"
-                                        type="text"
-                                        {...register("issuerCountry", { required: "Issuer country is required", maxLength: 100 })}
-                                        className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                                        label="Issuer Country"
+                                        required
+                                        {...register("issuerCountry", { required: "Issuer country is required" })}
+                                        error={errors.issuerCountry?.message}
                                     />
-                                    {errors.issuerCountry && (
-                                        <p className="text-red-500 text-sm">{errors.issuerCountry.message}</p>
-                                    )}
                                 </div>
                             </div>
                         </div>
@@ -525,35 +521,21 @@ ID Card Requested: ${applicationData.requestIdCard}
                                         )}
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <label htmlFor="country" className="block font-medium">
-                                            Country *
-                                        </label>
-                                        <input
-                                            id="country"
-                                            type="text"
-                                            {...register("country", { required: "Country is required", maxLength: 50 })}
-                                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                                        />
-                                        {errors.country && (
-                                            <p className="text-red-500 text-sm">{errors.country.message}</p>
-                                        )}
-                                    </div>
+                                    <CountrySelect
+                                        id="country"
+                                        label="Country"
+                                        required
+                                        {...register("country", { required: "Country is required" })}
+                                        error={errors.country?.message}
+                                    />
 
-                                    <div className="space-y-2">
-                                        <label htmlFor="residenceCountry" className="block font-medium">
-                                            Country of Residence *
-                                        </label>
-                                        <input
-                                            id="residenceCountry"
-                                            type="text"
-                                            {...register("residenceCountry", { required: "Country of residence is required", maxLength: 50 })}
-                                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                                        />
-                                        {errors.residenceCountry && (
-                                            <p className="text-red-500 text-sm">{errors.residenceCountry.message}</p>
-                                        )}
-                                    </div>
+                                    <CountrySelect
+                                        id="residenceCountry"
+                                        label="Country of Residence"
+                                        required
+                                        {...register("residenceCountry", { required: "Country of residence is required" })}
+                                        error={errors.residenceCountry?.message}
+                                    />
                                 </div>
                             </div>
                         </div>
