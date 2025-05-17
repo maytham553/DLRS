@@ -236,14 +236,14 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                         {/* Card Body */}
                                         <div className="p-4 card-body">
                                             {/* Barcode Section */}
-                                            <div className="flex justify-center mt-4 float-right flex-col align-center gap-2">
+                                            <div className="flex items-end mt-4 float-right flex-col align-center gap-2 justify-between" style={{ height: '8.9cm' }}>
                                                 <img 
                                                     src={`https://api.qrserver.com/v1/create-qr-code/?data=http://google.com/test&size=100x100`} 
                                                     alt="QR Code" 
-                                                    className="w-20 h-20"
+                                                    className="w-12 h-12"
                                                 />
 
-                                                <div className="photo-container float-right w-20 h-28 bg-gray-100 rounded border border-gray-300 overflow-hidden">
+                                                <div className="photo-container float-right w-20 bg-gray-100 rounded border border-gray-300 overflow-hidden">
                                                 {application.personalPhoto && (
                                                     <img 
                                                         src={application.personalPhoto} 
@@ -256,28 +256,28 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                             </div>
 
                                             {/* ID Section - Single line format */}
-                                            <p className="text-lg mb-2"><span className="text-black text-bold"></span> <span className="font-lg">{application.id}</span></p>
+                                            <p className="text-md mb-1"><span className="text-black text-bold"></span> <span>{application.id}</span></p>
 
                                             {/* Personal Info - Single line format */}
                                             <div className="space-y-1 mb-3 info-section text-xs">
                                                 <p><span className="text-gray-500">Last Name</span></p>
-                                                <p><span className="font-medium text-sm">{application.familyName}</span></p>
+                                                <p><span className="text-sm">{application.familyName}</span></p>
                                                 <p><span className="text-gray-500">First Name:</span></p>
-                                                <p><span className="font-medium text-sm">{application.name}</span></p>
-                                                <p><span className="text-gray-500">Birth Date</span></p>
-                                                <p><span className="font-medium text-sm">{application.birthDate}</span></p>
-                                                <p><span className="text-gray-500">Birth Place</span></p>
-                                                <p><span className="font-medium text-sm">{application.birthPlace}</span></p>
+                                                <p><span className="text-sm">{application.name}</span></p>
+                                                <p><span className="text-gray-500">Birth Date</span>: <span className="text-sm">{application.birthDate}</span></p>
+                                                <p><span className="text-gray-500">Birth Place</span>: <span className="text-sm">{application.birthPlace}</span></p>
                                                 <p><span className="text-gray-500">Adderss</span></p>
-                                                <p><span className="font-medium text-sm">{application.addressLine1}</span></p>
-                                                <p><span className="text-gray-500">Original ID</span> <span className="font-medium text-sm">{application.licenseNumber}</span></p>
-                                                <p><span className="text-gray-500">Issue Date</span> <span className="font-medium text-sm">{application.issueDate ? new Date((application.issueDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
-                                                <p><span className="text-gray-500">Expiry Date</span> <span className="font-medium text-sm">{application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
-                                            </div>                                           
+                                                <p><span className="text-sm">{application.addressLine1}</span></p>
+                                                <p><span className="text-gray-500">Permit Class</span>: <span className="text-sm">{application.licenseClass.join(",")}</span></p>
+                                                <p><span className="text-gray-500">Original ID</span></p>
+                                                <p style={{maxWidth: '4.5cm', overflow: 'hidden'}}><span className="text-sm">{application.licenseNumber}</span></p>
+                                                <p style={{maxWidth: '4.5cm', overflow: 'hidden'}}><span className="text-gray-500">Issue Date</span> <span className="text-sm">{application.issueDate ? new Date((application.issueDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
+                                                <p style={{maxWidth: '4.5cm', overflow: 'hidden'}}><span className="text-gray-500">Expiry Date</span> <span className="text-sm">{application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
+                                            </div>
                                         </div>
                                         
                                         {/* Card Footer */}
-                                        <div className="absolute bottom-0 left-0 right-0 bg-gray-100 px-3 py-6 text-xs text-gray-600">
+                                        <div className="absolute bottom-0 left-0 right-0 bg-gray-100 px-3 py-3 text-xs text-gray-600">
                                             <p>Holder Signature: </p>
                                         </div>
                                     </div>

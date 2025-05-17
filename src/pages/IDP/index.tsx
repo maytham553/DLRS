@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getUserIdpApplications } from "../../services/firebase";
 import { IDPFormData } from "../../types/idp";
-import { getIDPStatus, getStatusDisplay, hasIDPExpired } from "../../utils/idpUtils";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 
@@ -150,16 +149,12 @@ export const IDPHome = () => {
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">License No.</th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Country</th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Duration</th>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
                                         <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider sticky right-0 bg-muted/50 shadow-l">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-card divide-y divide-border">
                                     {applications.length > 0 ? (
                                         applications.map((app) => {
-                                            const isExpired = hasIDPExpired(app);
-                                            const statusDisplay = getStatusDisplay(app);
-
                                             return (
                                                 <tr key={app.firebaseId} className="hover:bg-muted/50 focus-within:bg-primary/5">
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
@@ -182,15 +177,7 @@ export const IDPHome = () => {
                                                         <span className="block sm:hidden font-bold text-xs text-muted-foreground mb-1">Duration:</span>
                                                         {app.duration}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <span className="block sm:hidden font-bold text-xs text-muted-foreground mb-1">Status:</span>
-                                                        <span className={statusDisplay.className}>
-                                                            {statusDisplay.text}
-                                                            {isExpired && getIDPStatus(app) === 'approved' && (
-                                                                <span className="ml-1 text-xs text-orange-500">!</span>
-                                                            )}
-                                                        </span>
-                                                    </td>
+                    
                                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 bg-card shadow-l">
                                                         <span className="block sm:hidden font-bold text-xs text-muted-foreground mb-1 text-left">Actions:</span>
                                                         <div className="flex justify-end space-x-3">
