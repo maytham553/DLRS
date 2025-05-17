@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import CountrySelect from "../components/CountrySelect";
-import { IDPFormInput, StatusType } from "../types/idp";
+import { IDPFormInput } from "../types/idp";
 import { generateIdpId } from "../utils/idGenerator";
 import { useNavigate } from "react-router-dom";
 
@@ -40,7 +40,6 @@ const PublicIDPApplication = () => {
             const formData: any = {
                 ...data,
                 id: idpId,
-                status: "Pending" as StatusType,
                 createdAt: timestamp
             };
 

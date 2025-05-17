@@ -1,4 +1,4 @@
-import { IDPFormData, StatusType } from "../types/idp";
+import { IDPFormData } from "../types/idp";
 
 /**
  * Checks if an IDP has passed its expiration date
@@ -14,12 +14,6 @@ export const hasIDPExpired = (data: IDPFormData): boolean => {
   const currentDate = new Date();
   const expirationDate = new Date(issueDate);
 
-  if (data.duration === "1 year") {
-    expirationDate.setFullYear(issueDate.getFullYear() + 1);
-  } else {
-    expirationDate.setFullYear(issueDate.getFullYear() + 3);
-  }
-
   return currentDate > expirationDate;
 };
 
@@ -29,14 +23,17 @@ export const hasIDPExpired = (data: IDPFormData): boolean => {
  * @param data The IDP form data
  * @returns The status as a StatusType
  */
-export const getIDPStatus = (data: IDPFormData): StatusType => {
-  // If there's a status stored in the database, respect that
-  if (data.status) {
-    return data.status;
+export const getIDPStatus = (data: IDPFormData): any => {
+  if (data.isCanceled) {
+    return "canceled";
   }
 
-  // Default to approved if no status is set
-  return "approved";
+  // if expired, return expired
+  if (hasIDPExpired(data)) {
+    return "expired";
+  }
+
+  return 'active';
 };
 
 /**
@@ -63,14 +60,9 @@ export const getStatusDisplay = (
         text: "EXPIRED",
         className: "bg-orange-100 text-orange-700",
       };
-    case "approved":
-      return {
-        text: "APPROVED",
-        className: "bg-green-100 text-green-700",
-      };
     default:
       return {
-        text: "APPROVED",
+        text: "ACTIVE",
         className: "bg-green-100 text-green-700",
       };
   }
@@ -102,20 +94,7 @@ export const getStatusBarClass = (data: IDPFormData): string => {
  * @returns A date object representing the expiration date
  */
 export const getExpirationDate = (data: IDPFormData): Date | null => {
-  if (!data.createdAt) {
-    return null;
-  }
-
-  const issueDate = new Date(data.createdAt.seconds * 1000);
-  const expirationDate = new Date(issueDate);
-
-  if (data.duration === "1 year") {
-    expirationDate.setFullYear(issueDate.getFullYear() + 1);
-  } else {
-    expirationDate.setFullYear(issueDate.getFullYear() + 3);
-  }
-
-  return expirationDate;
+  return data.expiryDate ? new Date(data.expiryDate.seconds * 1000) : null;
 };
 
 /**
