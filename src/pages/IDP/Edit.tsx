@@ -14,6 +14,8 @@ export const IDPEdit = () => {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [hasExpired, setHasExpired] = useState(false);
+    const [issueDate, setIssueDate] = useState<Date | null>(null);
+    const [expiryDate, setExpiryDate] = useState<Date | null>(null);
 
     // State for upload progress
     const [personalPhotoProgress, setPersonalPhotoProgress] = useState(0);
@@ -121,26 +123,70 @@ export const IDPEdit = () => {
                     }
 
                     // Check if the IDP has expired
-                    if (data.createdAt) {
-                        const issueDate = new Date((data.createdAt as any).seconds * 1000);
-                        const expirationDate = new Date(issueDate);
-                        if (data.duration.includes("1 YEAR")) {
-                            expirationDate.setFullYear(issueDate.getFullYear() + 1);
-                        } else if (data.duration.includes("3 YEAR")) {
-                            expirationDate.setFullYear(issueDate.getFullYear() + 3);
-                        } else if (data.duration.includes("5 YEAR")) {
-                            expirationDate.setFullYear(issueDate.getFullYear() + 5);
-                        } else if (data.duration.includes("10 YEAR")) {
-                            expirationDate.setFullYear(issueDate.getFullYear() + 10);
+                    if (data.issueDate) {
+                        // Use the issueDate field if it exists
+                        const issueDate = new Date((data.issueDate as any).seconds * 1000);
+                        setIssueDate(issueDate);
+                        
+                        // Use expiryDate field if it exists
+                        if (data.expiryDate) {
+                            const expiryDate = new Date((data.expiryDate as any).seconds * 1000);
+                            setExpiryDate(expiryDate);
+                            setHasExpired(new Date() > expiryDate);
                         } else {
-                            // Legacy format handling
-                            if (data.duration === "1 year") {
+                            // Calculate expiry date based on duration if not set
+                            const expirationDate = new Date(issueDate);
+                            if (data.duration.includes("1 YEAR")) {
                                 expirationDate.setFullYear(issueDate.getFullYear() + 1);
-                            } else if (data.duration === "3 years") {
+                            } else if (data.duration.includes("3 YEAR")) {
                                 expirationDate.setFullYear(issueDate.getFullYear() + 3);
+                            } else if (data.duration.includes("5 YEAR")) {
+                                expirationDate.setFullYear(issueDate.getFullYear() + 5);
+                            } else if (data.duration.includes("10 YEAR")) {
+                                expirationDate.setFullYear(issueDate.getFullYear() + 10);
+                            } else {
+                                // Legacy format handling
+                                if ((data.duration as any) === "1 year") {
+                                    expirationDate.setFullYear(issueDate.getFullYear() + 1);
+                                } else if ((data.duration as any) === "3 years") {
+                                    expirationDate.setFullYear(issueDate.getFullYear() + 3);
+                                }
                             }
+                            setExpiryDate(expirationDate);
+                            setHasExpired(new Date() > expirationDate);
                         }
-                        setHasExpired(new Date() > expirationDate);
+                    } else if (data.createdAt) {
+                        // Fall back to createdAt if no issueDate
+                        const issueDate = new Date((data.createdAt as any).seconds * 1000);
+                        setIssueDate(issueDate);
+                        
+                        // Use expiryDate field if it exists
+                        if (data.expiryDate) {
+                            const expiryDate = new Date((data.expiryDate as any).seconds * 1000);
+                            setExpiryDate(expiryDate);
+                            setHasExpired(new Date() > expiryDate);
+                        } else {
+                            // Calculate expiry date based on duration
+                            const expirationDate = new Date(issueDate);
+                            if (data.duration.includes("1 YEAR")) {
+                                expirationDate.setFullYear(issueDate.getFullYear() + 1);
+                            } else if (data.duration.includes("3 YEAR")) {
+                                expirationDate.setFullYear(issueDate.getFullYear() + 3);
+                            } else if (data.duration.includes("5 YEAR")) {
+                                expirationDate.setFullYear(issueDate.getFullYear() + 5);
+                            } else if (data.duration.includes("10 YEAR")) {
+                                expirationDate.setFullYear(issueDate.getFullYear() + 10);
+                            } else {
+                                // Legacy format handling
+                                if ((data.duration as any) === "1 year") {
+                                    expirationDate.setFullYear(issueDate.getFullYear() + 1);
+                                } else if ((data.duration as any) === "3 years") {
+                                    expirationDate.setFullYear(issueDate.getFullYear() + 3);
+                                }
+                            }
+                            setExpiryDate(expirationDate);
+                            setHasExpired(new Date() > expirationDate);
+                        }
                     }
                 } else {
                     setError("Application not found");
@@ -306,6 +352,21 @@ export const IDPEdit = () => {
                 isCanceled: data.isCanceled
             };
 
+            // Add issue date and expiry date if they have been modified
+            if (issueDate) {
+                updateData.issueDate = {
+                    seconds: Math.floor(issueDate.getTime() / 1000),
+                    nanoseconds: 0
+                };
+            }
+
+            if (expiryDate) {
+                updateData.expiryDate = {
+                    seconds: Math.floor(expiryDate.getTime() / 1000),
+                    nanoseconds: 0
+                };
+            }
+
             // Update the document
             const docRef = doc(db, "idps", id);
             await updateDoc(docRef, updateData);
@@ -358,6 +419,55 @@ export const IDPEdit = () => {
                             </div>
                         )}
                     </div>
+                    
+                    {/* Date Management Section */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 border-b pb-4">
+                        <div className="space-y-2">
+                            <label htmlFor="issueDate" className="block font-medium">
+                                Issue Date (Admin Only)
+                            </label>
+                            <input
+                                id="issueDate"
+                                type="date"
+                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                                value={issueDate ? issueDate.toISOString().split('T')[0] : ''}
+                                onChange={(e) => {
+                                    const date = e.target.value;
+                                    if (date) {
+                                        setIssueDate(new Date(date));
+                                    }
+                                }}
+                            />
+                            <p className="text-sm text-gray-500">
+                                Changing this date affects when the IDP was issued
+                            </p>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label htmlFor="expiryDate" className="block font-medium">
+                                Expiry Date (Admin Only)
+                            </label>
+                            <input
+                                id="expiryDate"
+                                type="date"
+                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                                value={expiryDate ? expiryDate.toISOString().split('T')[0] : ''}
+                                onChange={(e) => {
+                                    const date = e.target.value;
+                                    if (date) {
+                                        const newExpiryDate = new Date(date);
+                                        setExpiryDate(newExpiryDate);
+                                        // Update the hasExpired state
+                                        setHasExpired(new Date() > newExpiryDate);
+                                    }
+                                }}
+                            />
+                            <p className="text-sm text-gray-500">
+                                This overrides the default expiry calculation based on duration
+                            </p>
+                        </div>
+                    </div>
+                    
                     <div>
                         <p className="font-medium mb-2">Cancel Application</p>
                         <div className="flex items-center">
@@ -788,4 +898,4 @@ export const IDPEdit = () => {
     );
 };
 
-export default IDPEdit; 
+export default IDPEdit;
