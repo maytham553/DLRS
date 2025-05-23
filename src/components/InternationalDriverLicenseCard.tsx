@@ -88,50 +88,13 @@ const InternationalDriverLicenseCard = ({
             <html>
             <head>
                 <title>International Driver's License Print</title>
-                <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@3"></script>
-                <style>
-                    @page {
-                        size: A4;
-                        margin: 0;
-                    }
-                    body {
-                        margin: 0;
-                        padding: 0;
-                        font-family: Arial, sans-serif;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        min-height: 100vh;
-                    }
-                    .card-container {
-                        width: 85mm; /* Card width */
-                        height: 54mm; /* Standard ID card height */
-                    }
-                    /* Card styles */
-                    .idl-card {
-                        border: none;
-                        width: 100%;
-                        height: 100%;
-                        background-color: white;
-                        box-shadow: none;
-                        page-break-inside: avoid;
-                        position: relative;
-                    }
-                    /* Ensure text and layout is preserved in print */
-                    .idl-card * {
-                        visibility: visible;
-                        color-adjust: exact;
-                        -webkit-print-color-adjust: exact;
-                        print-color-adjust: exact;
-                    }
-                </style>
+                <script src="https://cdn.tailwindcss.com"></script>
             </head>
             <body>
-                <div class="card-container">
+                <div class="max-w-md">
                     ${cardHTML}
                 </div>
                 <script>
-                    // Print and close the window once loaded
                     window.onload = function() {
                         setTimeout(function() {
                             window.print();
@@ -237,7 +200,7 @@ const InternationalDriverLicenseCard = ({
                                                 {/* classes  */}
                                                 <div className="text-black ">
                                                     <span className="text-[#19b669]">Class : </span>
-                                                    <span className="text-black">{application.licenseClass}</span>
+                                                    <span className="text-black">{application.licenseClass.join(', ')}</span>
                                                 </div>
                                             </div>
 
