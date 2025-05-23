@@ -2,21 +2,20 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import CountrySelect from "../components/CountrySelect";
 import { IDPFormInput } from "../types/idp";
-import { generateIdpId } from "../utils/idGenerator";
 import { useNavigate } from "react-router-dom";
 
 const PublicIDPApplication = () => {
     const navigate = useNavigate();
-
-    // Generate ID first so it can be used in the form
-    const [idpId] = useState(generateIdpId());
-
     const {
         register,
         handleSubmit,
         setValue,
         formState: { errors, isSubmitting }
-    } = useForm<IDPFormInput>();
+    } = useForm<IDPFormInput>({
+        defaultValues: {
+            countryCode: "964"
+        }
+    });
 
     // Form state
     const [error, setError] = useState<string | null>(null);
@@ -39,7 +38,6 @@ const PublicIDPApplication = () => {
 
             const formData: any = {
                 ...data,
-                id: idpId,
                 createdAt: timestamp
             };
 
@@ -66,7 +64,7 @@ const PublicIDPApplication = () => {
                     month: 'short',
                     day: 'numeric'
                 });
-            } catch (e) {
+            } catch {
                 return dateString;
             }
         };
@@ -76,8 +74,7 @@ Date: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short'
 
 *Personal Information:*
 Name: ${applicationData.name} ${applicationData.familyName}
-Phone: ${applicationData.phoneNumber}
-Country Code: ${applicationData.countryCode}
+Phone: +${applicationData.countryCode || ""} ${applicationData.phoneNumber}
 Gender: ${applicationData.gender}
 Birth Date: ${formatDate(applicationData.birthDate)}
 Birth Place: ${applicationData.birthPlace}
@@ -99,7 +96,6 @@ Country of Residence: ${applicationData.residenceCountry}
 *IDP Options:*
 Duration: ${applicationData.duration}
 Price: ${getDurationPrice(applicationData.duration)}
-ID Card Requested: ${applicationData.requestIdCard}
 `;
 
         console.log("WhatsApp Message:", message);
@@ -138,10 +134,9 @@ ID Card Requested: ${applicationData.requestIdCard}
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
                         </div>
-                        <h2 className="text-2xl font-bold mb-2">Application Submitted!</h2>
-                        <p className="text-gray-600 mb-6">Your IDP application has been successfully submitted. Your application ID is: <span className="font-semibold">{applicationData?.id}</span></p>
+                        <h2 className="text-2xl font-bold mb-2">Application Details Collected</h2>
 
-                        <p className="text-gray-600 mb-4">Click the button below to send your application details via WhatsApp for faster processing:</p>
+                        <p className="text-gray-600 mb-4">Click the button below to send your application details via WhatsApp to begin the application process:</p>
 
                         <button
                             onClick={handleSendToWhatsApp}
@@ -412,7 +407,7 @@ ID Card Requested: ${applicationData.requestIdCard}
                                                 <input
                                                     type="checkbox"
                                                     value={licenseType}
-                                                    {...register("licenseClass", { 
+                                                    {...register("licenseClass", {
                                                         required: "At least one license class is required",
                                                         validate: value => value.length > 0 || "At least one license class is required"
                                                     })}
@@ -589,22 +584,6 @@ ID Card Requested: ${applicationData.requestIdCard}
                                     {errors.duration && (
                                         <p className="text-red-500 text-sm">{errors.duration.message}</p>
                                     )}
-                                </div>
-
-                                <div>
-                                    <p className="font-medium mb-2">Request ID Card</p>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="requestIdCard"
-                                            {...register("requestIdCard")}
-                                            className="mr-2 h-5 w-5"
-                                            onChange={(e) => {
-                                                setValue("requestIdCard", e.target.checked ? "Yes" : "No");
-                                            }}
-                                        />
-                                        <label htmlFor="requestIdCard">Yes, I want an ID card</label>
-                                    </div>
                                 </div>
                             </div>
                         </div>
