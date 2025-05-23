@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { IDPFormData } from "../types/idp";
+import QRCode from "react-qr-code";
 
 interface PrintIDPCardProps {
     application: IDPFormData;
@@ -12,20 +13,23 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
     const [cardPosition, setCardPosition] = useState<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>('top-left');
     const printCardRef = useRef<HTMLDivElement>(null);
 
+    // Domain for QR code
+    const qrCodeValue = "https://yourdomain.com";
+
     // Print card handler function
     const handlePrint = () => {
         if (!printCardRef.current) return;
-        
+
         // Create a new window for printing
         const printWindow = window.open('', '_blank');
         if (!printWindow) {
             alert('Please allow popups for this website to print your IDP card.');
             return;
         }
-        
+
         // Get the content of the card
         const cardHTML = printCardRef.current.innerHTML;
-        
+
         // Create a CSS-positioned card on an A4 page
         printWindow.document.writeln(`
             <!DOCTYPE html>
@@ -54,10 +58,10 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                         position: absolute;
                         width: 85mm; /* Card width */
                         height: 125mm; /* Card height */
-                        ${cardPosition === 'top-left' ? 'top: 10mm; left: 10mm;' : 
-                          cardPosition === 'top-right' ? 'top: 10mm; right: 10mm;' :
-                          cardPosition === 'bottom-left' ? 'bottom: 10mm; left: 10mm;' : 
-                          'bottom: 10mm; right: 10mm;'}
+                        ${cardPosition === 'top-left' ? 'top: 10mm; left: 10mm;' :
+                cardPosition === 'top-right' ? 'top: 10mm; right: 10mm;' :
+                    cardPosition === 'bottom-left' ? 'bottom: 10mm; left: 10mm;' :
+                        'bottom: 10mm; right: 10mm;'}
                     }
                     /* Additional print styles for the card */
                     .idp-card {
@@ -114,7 +118,7 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
             </body>
             </html>
         `);
-        
+
         printWindow.document.close();
     };
 
@@ -133,7 +137,7 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                     <div className="bg-white rounded-lg shadow-xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-xl font-bold">Print IDP Card</h2>
-                            <button 
+                            <button
                                 onClick={() => setShowPrintModal(false)}
                                 className="text-gray-500 hover:text-gray-700"
                             >
@@ -142,7 +146,7 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                 </svg>
                             </button>
                         </div>
-                        
+
                         <div className="mb-6">
                             <h3 className="font-medium mb-2">Select card position on A4 paper:</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -150,25 +154,25 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                 <div className="border border-gray-300 rounded-lg p-2 bg-white relative" style={{ aspectRatio: '210/297' }}>
                                     <div className="text-xs text-gray-400 text-center mb-2">A4 Paper Preview</div>
                                     {/* Card position indicator */}
-                                    <div 
+                                    <div
                                         className="absolute border-2 border-primary rounded-sm bg-primary/10"
                                         style={{
                                             width: '40%',
                                             height: '40%',
                                             ...(cardPosition === 'top-left' ? { top: '10%', left: '10%' } :
-                                               cardPosition === 'top-right' ? { top: '10%', right: '10%' } :
-                                               cardPosition === 'bottom-left' ? { bottom: '10%', left: '10%' } :
-                                               { bottom: '10%', right: '10%' })
+                                                cardPosition === 'top-right' ? { top: '10%', right: '10%' } :
+                                                    cardPosition === 'bottom-left' ? { bottom: '10%', left: '10%' } :
+                                                        { bottom: '10%', right: '10%' })
                                         }}
                                     ></div>
                                 </div>
-                                
+
                                 {/* Position Selection */}
                                 <div className="grid grid-cols-2 gap-2">
                                     <label className={`border rounded-lg p-2 flex items-center cursor-pointer ${cardPosition === 'top-left' ? 'bg-primary/10 border-primary' : 'border-gray-200'}`}>
-                                        <input 
-                                            type="radio" 
-                                            name="position" 
+                                        <input
+                                            type="radio"
+                                            name="position"
                                             value="top-left"
                                             checked={cardPosition === 'top-left'}
                                             onChange={() => setCardPosition('top-left')}
@@ -178,11 +182,11 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                             <div className="font-medium text-sm">Top Left</div>
                                         </div>
                                     </label>
-                                    
+
                                     <label className={`border rounded-lg p-2 flex items-center cursor-pointer ${cardPosition === 'top-right' ? 'bg-primary/10 border-primary' : 'border-gray-200'}`}>
-                                        <input 
-                                            type="radio" 
-                                            name="position" 
+                                        <input
+                                            type="radio"
+                                            name="position"
                                             value="top-right"
                                             checked={cardPosition === 'top-right'}
                                             onChange={() => setCardPosition('top-right')}
@@ -192,11 +196,11 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                             <div className="font-medium text-sm">Top Right</div>
                                         </div>
                                     </label>
-                                    
+
                                     <label className={`border rounded-lg p-2 flex items-center cursor-pointer ${cardPosition === 'bottom-left' ? 'bg-primary/10 border-primary' : 'border-gray-200'}`}>
-                                        <input 
-                                            type="radio" 
-                                            name="position" 
+                                        <input
+                                            type="radio"
+                                            name="position"
                                             value="bottom-left"
                                             checked={cardPosition === 'bottom-left'}
                                             onChange={() => setCardPosition('bottom-left')}
@@ -206,11 +210,11 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                             <div className="font-medium text-sm">Bottom Left</div>
                                         </div>
                                     </label>
-                                    
+
                                     <label className={`border rounded-lg p-2 flex items-center cursor-pointer ${cardPosition === 'bottom-right' ? 'bg-primary/10 border-primary' : 'border-gray-200'}`}>
-                                        <input 
-                                            type="radio" 
-                                            name="position" 
+                                        <input
+                                            type="radio"
+                                            name="position"
                                             value="bottom-right"
                                             checked={cardPosition === 'bottom-right'}
                                             onChange={() => setCardPosition('bottom-right')}
@@ -223,7 +227,7 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div className="mb-6">
                             <h3 className="font-medium mb-2">Card Preview:</h3>
                             <div className="border border-gray-300 p-4 rounded-lg bg-gray-50 flex justify-center">
@@ -237,22 +241,27 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                         <div className="p-4 card-body">
                                             {/* Barcode Section */}
                                             <div className="flex items-end mt-4 float-right flex-col align-center gap-2 justify-between" style={{ height: '8.9cm' }}>
-                                                <img 
-                                                    src={`https://api.qrserver.com/v1/create-qr-code/?data=http://google.com/test&size=100x100`} 
-                                                    alt="QR Code" 
-                                                    className="w-12 h-12"
-                                                />
+                                                <div className="w-12 h-12 bg-white p-1 rounded border border-gray-300 flex justify-center items-center">
+                                                    <QRCode
+                                                        value={qrCodeValue}
+                                                        size={40}
+                                                        level="L"
+                                                        bgColor="#FFFFFF"
+                                                        fgColor="#000000"
+                                                        style={{ maxWidth: "100%", height: "auto" }}
+                                                    />
+                                                </div>
 
                                                 <div className="photo-container float-right w-20 bg-gray-100 rounded border border-gray-300 overflow-hidden">
-                                                {application.personalPhoto && (
-                                                    <img 
-                                                        src={application.personalPhoto} 
-                                                        alt="Personal Photo" 
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                )}
+                                                    {application.personalPhoto && (
+                                                        <img
+                                                            src={application.personalPhoto}
+                                                            alt="Personal Photo"
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    )}
                                                 </div>
-                                            
+
                                             </div>
 
                                             {/* ID Section - Single line format */}
@@ -270,12 +279,12 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                                 <p><span className="text-sm">{application.addressLine1}</span></p>
                                                 <p><span className="text-gray-500">Permit Class</span>: <span className="text-sm">{application.licenseClass.join(",")}</span></p>
                                                 <p><span className="text-gray-500">Original ID</span></p>
-                                                <p style={{maxWidth: '4.5cm', overflow: 'hidden'}}><span className="text-sm">{application.licenseNumber}</span></p>
-                                                <p style={{maxWidth: '4.5cm', overflow: 'hidden'}}><span className="text-gray-500">Issue Date</span> <span className="text-sm">{application.issueDate ? new Date((application.issueDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
-                                                <p style={{maxWidth: '4.5cm', overflow: 'hidden'}}><span className="text-gray-500">Expiry Date</span> <span className="text-sm">{application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
+                                                <p style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-sm">{application.licenseNumber}</span></p>
+                                                <p style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-gray-500">Issue Date</span> <span className="text-sm">{application.issueDate ? new Date((application.issueDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
+                                                <p style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-gray-500">Expiry Date</span> <span className="text-sm">{application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
                                             </div>
                                         </div>
-                                        
+
                                         {/* Card Footer */}
                                         <div className="absolute bottom-0 left-0 right-0 bg-gray-100 px-3 py-3 text-xs text-gray-600">
                                             <p>Holder Signature: </p>
@@ -284,15 +293,15 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div className="flex justify-end space-x-3">
-                            <button 
+                            <button
                                 onClick={() => setShowPrintModal(false)}
                                 className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                             >
                                 Cancel
                             </button>
-                            <button 
+                            <button
                                 onClick={handlePrint}
                                 className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
                             >
