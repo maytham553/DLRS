@@ -42,7 +42,9 @@ const InternationalDriverLicenseCard = ({
 
             // Using html2canvas with higher resolution for better quality
             const canvas = await html2canvas(idCardRef.current, {
-                // allowTaint: true // Enable CORS for images
+                allowTaint: true,
+                useCORS: true,
+                logging: true
             });
 
             // Get image data URL
