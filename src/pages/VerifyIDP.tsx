@@ -219,51 +219,56 @@ export default function VerifyIDP() {
 
                                 {/* Personal Details */}
                                 <div className="w-2/3 print-details">
-                                    {/* Personal Information */}
                                     <div className="mb-5 print-section">
-                                        <div className="flex items-center mb-3 print-section-header">
-                                            <div className="w-1.5 h-5 bg-blue-500 rounded-sm mr-2 print-section-indicator print-blue"></div>
-                                            <h3 className="text-sm font-semibold text-gray-700">Personal Information</h3>
-                                        </div>
 
                                         <div className="space-y-3 pl-4 print-fields">
                                             <div className="flex print-field">
                                                 <span className="text-sm w-32 text-gray-500 print-label">First Name</span>
+                                            </div>
+                                            <div className="flex print-field">
                                                 <span className="text-sm font-medium flex-1 print-value">{idpData.name}</span>
                                             </div>
 
                                             <div className="flex print-field">
                                                 <span className="text-sm w-32 text-gray-500 print-label">Family Name</span>
+                                            </div>
+
+                                            <div className="flex print-field">
                                                 <span className="text-sm font-medium flex-1 print-value">{idpData.familyName}</span>
                                             </div>
 
                                             <div className="flex print-field">
                                                 <span className="text-sm w-32 text-gray-500 print-label">Date of Birth</span>
+                                            </div>
+
+                                            <div className="flex print-field">
                                                 <span className="text-sm font-medium flex-1 print-value">{idpData.birthDate}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Validity Information */}
                                     <div className="print-section">
-                                        <div className="flex items-center mb-3 print-section-header">
-                                            <div className="w-1.5 h-5 bg-purple-500 rounded-sm mr-2 print-section-indicator print-purple"></div>
-                                            <h3 className="text-sm font-semibold text-gray-700">Validity Information</h3>
-                                        </div>
 
                                         <div className="space-y-3 pl-4 print-fields">
                                             <div className="flex print-field">
                                                 <span className="text-sm w-32 text-gray-500 print-label">Issued On</span>
+                                            </div>
+                                            <div className="flex print-field">
                                                 <span className="text-sm font-medium flex-1 print-value">{getFormattedIssueDate(idpData)}</span>
                                             </div>
 
                                             <div className="flex print-field">
                                                 <span className="text-sm w-32 text-gray-500 print-label">Valid For</span>
+                                            </div>
+                                            <div className="flex print-field">
                                                 <span className="text-sm font-medium flex-1 print-value">{idpData.duration}</span>
                                             </div>
 
                                             <div className="flex print-field">
                                                 <span className="text-sm w-32 text-gray-500 print-label">Expires On</span>
+                                            </div>
+
+                                            <div className="flex print-field">
                                                 <span className={`text-sm font-medium flex-1 ${hasExpired && getIDPStatus(idpData) === 'approved' ? 'text-orange-600' : ''} print-value`}>
                                                     {getFormattedExpirationDate(idpData)}
                                                 </span>
@@ -271,6 +276,8 @@ export default function VerifyIDP() {
 
                                             <div className="flex print-field">
                                                 <span className="text-sm w-32 text-gray-500 print-label">Status</span>
+                                            </div>
+                                            <div className="flex print-field">
                                                 <span className={`text-sm font-medium flex-1 ${getIDPStatus(idpData) === 'canceled' ? 'text-red-600' :
                                                     getIDPStatus(idpData) === 'expired' ? 'text-orange-600' :
                                                         'text-green-600'
@@ -325,7 +332,7 @@ export default function VerifyIDP() {
                     <p className="text-lg text-foreground/70 mb-8 max-w-2xl mx-auto text-center">
                         We advise international driving license users to rent cars from trusted companies.
                     </p>
-                    
+
                     <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 px-4">
                         <img src="/logos/png-transparent-national-car-rental-enterprise-rent-a-car-budget-rent-a-car-car-rental-text-logo-car.png" alt="Enterprise" className="h-12 md:h-16 object-contain" />
                         <img src="/logos/Budget-Logo.png" alt="Budget" className="h-12 md:h-16 object-contain" />

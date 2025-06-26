@@ -13,6 +13,9 @@ export default function Layout({ children }: LayoutProps) {
                 {children}
             </main>
             <footer className="py-6 bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-12">
+                <div className="w-full flex justify-center my-4">
+                    <img src="/logo_gold.png" className="w-40" />
+                </div>
                 <div className="container mx-auto px-4 text-center text-sm text-slate-600 dark:text-slate-400">
                     <p>*IAA IDG is a private company and is not affiliated with United Nations or any other quasi government organisation</p>
                 </div>

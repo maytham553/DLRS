@@ -6,6 +6,8 @@ import { addIdpApplication, uploadFile } from "../../services/firebase";
 import { FileUpload } from "../../components/FileUpload";
 import CountrySelect from "../../components/CountrySelect";
 import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 export const IDPApplication = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -13,6 +15,24 @@ export const IDPApplication = () => {
     const [idpId] = useState(generateIdpId());
     const [expiryDate, setExpiryDate] = useState<Date | null>(null);
     const [issueDate] = useState<Date>(new Date()); // Current date as issue date
+
+    const auth = getAuth();
+    const userId = auth.currentUser?.uid;
+    const [userProfile, setUserProfile] = useState<{ name: string; code: string; } | null>(null);
+
+    useEffect(() => {
+        const fetchUserDoc = async () => {
+            if (!userId) return;
+            const db = getFirestore();
+            const userRef = doc(db, "users", userId);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                setUserProfile(userSnap.data() as { name: string; code: string; });
+            }
+        };
+        fetchUserDoc();
+    }, [userId]);
+
 
     // State for upload progress
     const [personalPhotoProgress, setPersonalPhotoProgress] = useState(0);
@@ -82,7 +102,7 @@ export const IDPApplication = () => {
     const calculateExpiryDate = (durationString: string): Date => {
         const now = new Date();
         const result = new Date(now);
-        
+
         if (durationString.includes("1 YEAR")) {
             result.setFullYear(now.getFullYear() + 1);
         } else if (durationString.includes("3 YEAR")) {
@@ -92,7 +112,7 @@ export const IDPApplication = () => {
         } else if (durationString.includes("10 YEAR")) {
             result.setFullYear(now.getFullYear() + 10);
         }
-        
+
         return result;
     };
 
@@ -232,6 +252,11 @@ export const IDPApplication = () => {
     };
 
     const onSubmit: SubmitHandler<any> = async (data) => {
+        if (!userProfile || !userProfile.code) {
+            setError("Failed to retrieve user profile information");
+            return;
+        }
+
         // Check if any uploads are in progress
         if (uploading.personalPhoto || uploading.licenseFrontPhoto || uploading.licenseBackPhoto) {
             setError("Please wait for all file uploads to complete before submitting");
@@ -245,6 +270,8 @@ export const IDPApplication = () => {
 
         setIsSubmitting(true);
         setError(null);
+
+        data.id = userProfile.code + "-" + idpId; // Use user code as prefix for IDP ID
 
         try {
             // Prepare data with photo URLs for Firestore
@@ -444,13 +471,13 @@ export const IDPApplication = () => {
                                             <input
                                                 type="checkbox"
                                                 value={licenseType}
-                                                {...register("licenseClass", { 
+                                                {...register("licenseClass", {
                                                     required: "At least one license class is required",
                                                     validate: value => value.length > 0 || "At least one license class is required"
                                                 })}
                                                 className="h-6 w-6 mb-2"
                                             />
-                                            <span className="text-center">Class<br/>{licenseType}</span>
+                                            <span className="text-center">Class<br />{licenseType}</span>
                                         </label>
                                     </div>
                                 ))}

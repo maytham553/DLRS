@@ -23,7 +23,7 @@ export default function Navigation() {
 
     const links = [
         { name: "Home", path: "/" },
-        { name: "Verify IDP", path: "/verify-idp" },
+        { name: "Verify", path: "/verify-idp" },
         { name: "IDP Application", path: "/public-idp-application" }
     ];
 
@@ -53,10 +53,9 @@ export default function Navigation() {
                 <div className="flex items-center justify-between">
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-2">
-                        <div className="size-8 rounded-lg bg-primary flex items-center justify-center">
-                            <span className="text-primary-foreground font-bold">DL</span>
+                        <div className="rounded-lg flex items-center justify-center">
+                            <img src="./logo.png" className="w-24" />
                         </div>
-                        <span className="text-lg font-semibold text-foreground">DLRS</span>
                     </Link>
 
                     {/* Organization Text - Desktop */}

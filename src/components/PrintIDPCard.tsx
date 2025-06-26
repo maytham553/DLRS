@@ -241,23 +241,23 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                         <div className="p-4 card-body">
                                             {/* Barcode Section */}
                                             <div className="flex items-end mt-4 float-right flex-col align-center gap-2 justify-between" style={{ height: '8.9cm' }}>
-                                                <div className="w-12 h-12 bg-white p-1 rounded border border-gray-300 flex justify-center items-center">
+                                                <div style={{ width: '2cm', height: '2cm' }} className="bg-white p-1 rounded border border-gray-300 flex justify-center items-center">
                                                     <QRCode
                                                         value={qrCodeValue}
                                                         size={40}
                                                         level="L"
                                                         bgColor="#FFFFFF"
                                                         fgColor="#000000"
-                                                        style={{ maxWidth: "100%", height: "auto" }}
+                                                        style={{ width: '2cm', height: '2cm' }}
                                                     />
                                                 </div>
 
-                                                <div className="photo-container float-right w-20 bg-gray-100 rounded border border-gray-300 overflow-hidden">
+                                                <div className="photo-container float-right rounded border-none overflow-hidden" style={{ width: '3cm' }}>
                                                     {application.personalPhoto && (
                                                         <img
                                                             src={application.personalPhoto}
                                                             alt="Personal Photo"
-                                                            className="w-full h-full object-cover"
+                                                            className="w-full h-full object-cover border-none"
                                                         />
                                                     )}
                                                 </div>
@@ -265,7 +265,7 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                             </div>
 
                                             {/* ID Section - Single line format */}
-                                            <p className="text-md mb-1"><span className="text-black text-bold"></span> <span>{application.id}</span></p>
+                                            <p className="text-sm mb-1"><span className="text-black text-bold"></span> <span>{application.id}</span></p>
 
                                             {/* Personal Info - Single line format */}
                                             <div className="space-y-1 mb-3 info-section text-xs">

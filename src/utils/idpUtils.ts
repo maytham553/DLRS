@@ -6,13 +6,12 @@ import { IDPFormData } from "../types/idp";
  * @returns True if the IDP has passed its expiration date
  */
 export const hasIDPExpired = (data: IDPFormData): boolean => {
-  if (!data.createdAt) {
-    return false;
+  if (!data.expiryDate) {
+    return true;
   }
 
-  const issueDate = new Date(data.createdAt.seconds * 1000);
   const currentDate = new Date();
-  const expirationDate = new Date(issueDate);
+  const expirationDate = new Date(data.expiryDate?.seconds * 1000);
 
   return currentDate > expirationDate;
 };
@@ -33,7 +32,7 @@ export const getIDPStatus = (data: IDPFormData): any => {
     return "expired";
   }
 
-  return 'active';
+  return "active";
 };
 
 /**
@@ -44,28 +43,15 @@ export const getIDPStatus = (data: IDPFormData): any => {
 export const getStatusDisplay = (
   data: IDPFormData
 ): { text: string; className: string } => {
-  const status = getIDPStatus(data);
-
-  // Note: status is determined solely by what's stored in the database,
-  // not by expiration date (even if the IDP is expired but status is 'approved')
-
-  switch (status) {
-    case "canceled":
-      return {
-        text: "CANCELED",
-        className: "bg-red-100 text-red-700",
-      };
-    case "expired":
-      return {
-        text: "EXPIRED",
-        className: "bg-orange-100 text-orange-700",
-      };
-    default:
-      return {
-        text: "ACTIVE",
-        className: "bg-green-100 text-green-700",
-      };
+  if (data.isCanceled) {
+    return { text: "Canceled", className: "text-red-500" };
   }
+
+  if (hasIDPExpired(data)) {
+    return { text: "Expired", className: "text-orange-500" };
+  }
+
+  return { text: "Active", className: "text-green-500" };
 };
 
 /**
@@ -109,7 +95,7 @@ export const getFormattedExpirationDate = (data: IDPFormData): string => {
     return "Unknown";
   }
 
-  return expirationDate.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
+  return expirationDate.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
 };
 
 /**
@@ -119,7 +105,7 @@ export const getFormattedExpirationDate = (data: IDPFormData): string => {
  */
 export const getFormattedIssueDate = (data: IDPFormData): string => {
   if (data.createdAt) {
-    return new Date(data.createdAt.seconds * 1000).toISOString().split('T')[0]; // Returns YYYY-MM-DD format
+    return new Date(data.createdAt.seconds * 1000).toISOString().split("T")[0]; // Returns YYYY-MM-DD format
   }
-  return new Date().toISOString().split('T')[0]; // Returns YYYY-MM-DD format
+  return new Date().toISOString().split("T")[0]; // Returns YYYY-MM-DD format
 };

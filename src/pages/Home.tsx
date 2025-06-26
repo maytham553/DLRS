@@ -31,7 +31,7 @@ export default function Home() {
                             </Link>
                             <Link to="/verify-idp">
                                 <Button size="lg" variant="outline" className="h-12 px-8">
-                                    Verify IDP
+                                    Verify
                                 </Button>
                             </Link>
                         </>
@@ -58,9 +58,8 @@ export default function Home() {
                     <p className="text-lg text-foreground/70 mb-8 max-w-2xl mx-auto text-center">
                         We advise international driving license users to rent cars from trusted companies.
                     </p>
-                    
+
                     <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 px-4">
-                        <img src="/logos/png-transparent-national-car-rental-enterprise-rent-a-car-budget-rent-a-car-car-rental-text-logo-car.png" alt="Enterprise" className="h-12 md:h-16 object-contain" />
                         <img src="/logos/Budget-Logo.png" alt="Budget" className="h-12 md:h-16 object-contain" />
                         <img src="/logos/Thrifty-car-rental-logo.jpg" alt="Thrifty" className="h-12 md:h-16 object-contain" />
                         <img src="/logos/Hertz_logo.jpg" alt="Hertz" className="h-12 md:h-16 object-contain" />
@@ -83,8 +82,8 @@ export default function Home() {
                                 Complete Your IDP Application in Just 5 Minutes
                             </h2>
                             <p className="text-lg text-foreground/70 mb-8">
-                                An International Driving Permit (IDP) is essential for driving abroad, complementing your native license. 
-                                Our streamlined digital process ensures quick issuance, helping you meet international driving requirements 
+                                An International Driving Permit (IDP) is essential for driving abroad, complementing your native license.
+                                Our streamlined digital process ensures quick issuance, helping you meet international driving requirements
                                 with confidence and legal compliance in over 150 countries worldwide.
                             </p>
                             <Link to="/public-idp-application">
@@ -94,9 +93,9 @@ export default function Home() {
                             </Link>
                         </div>
                         <div className="w-full md:w-1/2 flex justify-center">
-                            <img 
-                                src="https://automobiledrivingclub.org.uk/wp-content/uploads/2022/04/Capture.png" 
-                                alt="International Driver's Permit" 
+                            <img
+                                src="/home_image_1.jpeg"
+                                alt="International Driver's Permit"
                                 className="max-w-full h-auto rounded-lg shadow-lg"
                                 width="586"
                                 height="678"
@@ -136,20 +135,20 @@ export default function Home() {
                                 </Link>
                             </div>
                         </div>
-                        
+
                         {/* Benefits Column */}
                         <div className="w-full md:w-1/2">
                             <div className="mb-6">
                                 <div className="overflow-hidden rounded-xl">
-                                    <img 
-                                        src="https://automobiledrivingclub.org.uk/wp-content/uploads/2022/04/istockphoto-1307382585-612x612-1.jpg" 
-                                        alt="International Driving" 
+                                    <img
+                                        src="https://automobiledrivingclub.org.uk/wp-content/uploads/2022/04/istockphoto-1307382585-612x612-1.jpg"
+                                        alt="International Driving"
                                         className="w-full h-auto object-cover"
                                         loading="lazy"
                                     />
                                 </div>
                             </div>
-                            
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
                                     <div className="mb-4 text-primary text-xl">
@@ -181,7 +180,7 @@ export default function Home() {
                         <div className="w-full md:w-1/2 p-8 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
                             <h2 className="text-2xl font-bold mb-6">WHAT IS IDP</h2>
                             <p className="text-foreground/70 mb-6">
-                                The International Driving Permit <strong>(IDP)</strong> is an official document that helps you drive overseas using your existing valid driver's license. 
+                                The International Driving Permit <strong>(IDP)</strong> is an official document that helps you drive overseas using your existing valid driver's license.
                                 It's commonly required by car rental agencies and frequently requested by traffic authorities when you present your foreign driver's license.
                             </p>
                             <div className="flex justify-center mt-8">
@@ -193,13 +192,13 @@ export default function Home() {
                                 </Link>
                             </div>
                         </div>
-                        
+
                         {/* How It Works Column */}
                         <div className="w-full md:w-1/2 p-8 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
                             <h2 className="text-2xl font-bold mb-6">HOW IT WORKS</h2>
                             <p className="text-foreground/70 mb-6">
-                                An IDP translates your driver's license into a format that's recognized internationally. 
-                                It's designed to be universally understood, bridging language barriers and ensuring your driving credentials 
+                                An IDP translates your driver's license into a format that's recognized internationally.
+                                It's designed to be universally understood, bridging language barriers and ensuring your driving credentials
                                 are recognized in over 150 countries worldwide.
                             </p>
                             <div className="flex justify-center mt-8">
@@ -241,7 +240,7 @@ export default function Home() {
                             Select the IDP duration that best fits your travel needs. Both options provide comprehensive coverage for international driving.
                         </p>
                     </div>
-                    
+
                     <div className="flex flex-col md:flex-row gap-8 max-w-4xl mx-auto">
                         {/* 1 Year Plan */}
                         <div className="w-full md:w-1/2 bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px]">
@@ -269,7 +268,7 @@ export default function Home() {
                                 </ul>
                             </div>
                         </div>
-                        
+
                         {/* 3 Year Plan */}
                         <div className="w-full md:w-1/2 bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border-2 border-primary relative transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px]">
                             <div className="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
