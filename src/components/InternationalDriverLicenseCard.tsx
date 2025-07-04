@@ -137,7 +137,7 @@ const InternationalDriverLicenseCard = ({
                         <div className="mb-6">
                             <div className="border border-gray-300 overflow-scroll p-4 rounded-lg bg-gray-50 flex justify-center">
                                 <div
-                                    className="w-full max-w-md min-w-md overflow-scroll"
+                                    className="w-full max-w-md min-w-md overflow-hidden"
                                     ref={idCardRef}
                                 >
                                     {/* Card container with empty card background */}

@@ -4,6 +4,7 @@ import { getUserIdpApplications } from "../../services/firebase";
 import { IDPFormData } from "../../types/idp";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
+import { useUserProfile } from "./UseUserProfile";
 
 export const IDPHome = () => {
     const [applications, setApplications] = useState<(IDPFormData & { firebaseId: string })[]>([]);
@@ -13,6 +14,8 @@ export const IDPHome = () => {
     // Search state
     const [searchTerm, setSearchTerm] = useState("");
     const [tempSearchTerm, setTempSearchTerm] = useState("");
+
+    const { isAdmin } = useUserProfile();
 
     // Fetch applications with search from Firebase
     const fetchApplications = async (searchValue = "") => {
@@ -24,6 +27,22 @@ export const IDPHome = () => {
                 throw error;
             }
 
+            setApplications(applications as (IDPFormData & { firebaseId: string })[]);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to load applications");
+            console.error("Error loading applications:", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const fetchAllApplications = async () => {
+        setIsLoading(true);
+        try {
+            const { applications, error } = await getUserIdpApplications("", isAdmin ? "admin" : "user", isAdmin);
+            if (error) {
+                throw error;
+            }
             setApplications(applications as (IDPFormData & { firebaseId: string })[]);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to load applications");
@@ -86,11 +105,35 @@ export const IDPHome = () => {
                     </div>
                     <h1 className="text-2xl font-bold">International Driving Permits</h1>
                 </div>
-                <Link to="/idp/application">
-                    <Button size="lg" className="h-12 px-8">
-                        New Application
-                    </Button>
-                </Link>
+                <div>
+                    <Link to="/idp/application">
+                        <Button size="sm" className="h-12">
+                            New Application
+                        </Button>
+                    </Link>
+
+                    {isAdmin && (
+                        <>
+                            <Button
+                                size="sm"
+                                className="h-12 ml-4"
+                                variant="default"
+                                onClick={() => fetchAllApplications()}
+                            >
+                                View All Applications
+                            </Button>
+
+                            <Button
+                                size="sm"
+                                className="h-12 ml-4"
+                                variant="default"
+                                onClick={() => fetchApplications()}
+                            >
+                                Only Mine
+                            </Button>
+                        </>
+                    )}
+                </div>
             </div>
 
             {applications.length === 0 && !isLoading && !searchTerm ? (
@@ -177,7 +220,7 @@ export const IDPHome = () => {
                                                         <span className="block sm:hidden font-bold text-xs text-muted-foreground mb-1">Duration:</span>
                                                         {app.duration}
                                                     </td>
-                    
+
                                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 bg-card shadow-l">
                                                         <span className="block sm:hidden font-bold text-xs text-muted-foreground mb-1 text-left">Actions:</span>
                                                         <div className="flex justify-end space-x-3">

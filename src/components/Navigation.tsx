@@ -47,8 +47,7 @@ export default function Navigation() {
     };
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/80 backdrop-blur shadow-sm" : "bg-transparent"
-            }`}>
+        <nav>
             {/* Contact Header */}
             <div className="bg-slate-50 dark:bg-slate-800 py-2 px-4 text-sm">
                 <div className="container mx-auto flex justify-between items-center text-slate-600 dark:text-slate-400">

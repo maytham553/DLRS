@@ -17,6 +17,9 @@ import {
   startAt,
   limit,
   endAt,
+  where,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import {
   getStorage,
@@ -85,24 +88,44 @@ export const addIdpApplication = async (data: any) => {
 };
 
 // Updated getUserIdpApplications to fetch up to 250 records with optional search
-export const getUserIdpApplications = async (searchTerm = "") => {
+export const getUserIdpApplications = async (
+  searchTerm = "",
+  role?: string,
+  showAll?: boolean
+) => {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
   try {
     const user = auth.currentUser;
     if (!user) {
       throw new Error("User not authenticated");
     }
+    const userId = user.uid;
 
     // If there's a search term, filter by name or familyName
     if (searchTerm) {
       // Firebase doesn't support OR conditions directly in queries,
       // so we'll need to do multiple queries and combine results
-      const idQuery = query(
-        collection(db, "idps"),
-        orderBy("id"),
-        startAt(searchTerm),
-        endAt(searchTerm),
-        limit(250)
-      );
+      let idQuery = null;
+      if (role && role === "admin") {
+        idQuery = query(
+          collection(db, "idps"),
+          where("id", "==", searchTerm.trim()),
+          orderBy("createdAt", "desc"),
+          limit(250)
+        );
+      } else {
+        idQuery = query(
+          collection(db, "idps"),
+          where("userId", "==", userId),
+          where("id", "==", searchTerm.trim()),
+          orderBy("createdAt", "desc"),
+          limit(250)
+        );
+      }
 
       // Execute both queries
       const nameSnapshot = await getDocs(idQuery);
@@ -130,11 +153,21 @@ export const getUserIdpApplications = async (searchTerm = "") => {
       };
     } else {
       // If no search term, get all records (limited to 250)
-      const idpsQuery = query(
-        collection(db, "idps"),
-        orderBy("createdAt", "desc"),
-        limit(250)
-      );
+      let idpsQuery = null;
+      if (role && role === "admin" && showAll) {
+        idpsQuery = query(
+          collection(db, "idps"),
+          orderBy("createdAt", "desc"),
+          limit(250)
+        );
+      } else {
+        idpsQuery = query(
+          collection(db, "idps"),
+          orderBy("createdAt", "desc"),
+          where("userId", "==", userId),
+          limit(250)
+        );
+      }
 
       const querySnapshot = await getDocs(idpsQuery);
       const applications = querySnapshot.docs.map((doc) => ({
@@ -186,6 +219,22 @@ export const uploadFile = (
       }
     );
   });
+};
+
+export const getUserProfile = async () => {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
+  const userId = user.uid;
+  const userProfileRef = doc(db, `users/${userId}`);
+  const userProfileSnapshot = await getDoc(userProfileRef);
+  if (!userProfileSnapshot.exists()) {
+    throw new Error("User profile not found");
+  }
+  const userProfileData = userProfileSnapshot.data();
+  return { ...userProfileData };
 };
 
 export { auth, db, storage };

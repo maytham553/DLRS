@@ -68,33 +68,7 @@ export const IDPApplication = () => {
         handleSubmit,
         formState: { errors },
         watch
-    } = useForm<IDPFormInput>({
-        defaultValues: {
-            id: idpId,
-            name: "Maytham",
-            familyName: "Al-Qahtani",
-            phoneNumber: "0505050505",
-            gender: "Male",
-            birthDate: "1990-01-01",
-            birthPlace: "Saudi Arabia",
-            licenseNumber: "1234567890",
-            licenseClass: [],
-            issuerCountry: "Saudi Arabia",
-            addressLine1: "123 Main St",
-            addressLine2: "Apt 1",
-            city: "Riyadh",
-            state: "Riyadh",
-            zipCode: "12345",
-            country: "Saudi Arabia",
-            residenceCountry: "Saudi Arabia",
-            duration: "1 YEAR - $50",
-            requestIdCard: "No",
-            personalPhoto: null,
-            licenseFrontPhoto: null,
-            licenseBackPhoto: null,
-            isCanceled: false // Default is not canceled
-        },
-    });
+    } = useForm<IDPFormInput>({});
 
     const navigate = useNavigate();
 
