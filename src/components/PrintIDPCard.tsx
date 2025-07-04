@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { IDPFormData } from "../types/idp";
 import QRCode from "react-qr-code";
+import { formatDate } from "@/utils/idpUtils";
 
 interface PrintIDPCardProps {
     application: IDPFormData;
@@ -9,12 +10,14 @@ interface PrintIDPCardProps {
 }
 
 const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
+    console.log('PrintIDPCard rendered');
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [cardPosition, setCardPosition] = useState<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>('top-left');
     const printCardRef = useRef<HTMLDivElement>(null);
 
     // Domain for QR code
-    const qrCodeValue = "https://yourdomain.com";
+    const myCurrentDomain = window.location.hostname;
+    const qrCodeValue = `https://${myCurrentDomain}/verify`;
 
     // Print card handler function
     const handlePrint = () => {
@@ -237,51 +240,56 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                         width: '8cm',
                                         height: '11cm'
                                     }}>
+                                        <div style={{ width: '2cm', height: '2cm', position: 'absolute', right: 4, top: 4 }}
+                                            className="bg-white p-1 rounded border border-gray-300 flex justify-center items-center">
+                                            <QRCode
+                                                value={qrCodeValue}
+                                                size={40}
+                                                level="L"
+                                                bgColor="#FFFFFF"
+                                                fgColor="#000000"
+                                                style={{ width: '2cm', height: '2cm' }}
+                                            />
+                                        </div>
+
+                                        <div className="photo-container float-right rounded border-none overflow-hidden"
+                                            style={{ width: '3cm', position: 'absolute', right: 4, bottom: 45 }}>
+                                            {application.personalPhoto && (
+                                                <img
+                                                    src={application.personalPhoto}
+                                                    alt="Personal Photo"
+                                                    className="w-full h-full object-cover border-none"
+                                                />
+                                            )}
+                                        </div>
+
                                         {/* Card Body */}
-                                        <div className="p-4 card-body">
+                                        <div className="pl-2 py-2 pr-1 card-body">
                                             {/* Barcode Section */}
-                                            <div className="flex items-end mt-4 float-right flex-col align-center gap-2 justify-between" style={{ height: '8.9cm' }}>
-                                                <div style={{ width: '2cm', height: '2cm' }} className="bg-white p-1 rounded border border-gray-300 flex justify-center items-center">
-                                                    <QRCode
-                                                        value={qrCodeValue}
-                                                        size={40}
-                                                        level="L"
-                                                        bgColor="#FFFFFF"
-                                                        fgColor="#000000"
-                                                        style={{ width: '2cm', height: '2cm' }}
-                                                    />
-                                                </div>
-
-                                                <div className="photo-container float-right rounded border-none overflow-hidden" style={{ width: '3cm' }}>
-                                                    {application.personalPhoto && (
-                                                        <img
-                                                            src={application.personalPhoto}
-                                                            alt="Personal Photo"
-                                                            className="w-full h-full object-cover border-none"
-                                                        />
-                                                    )}
-                                                </div>
-
-                                            </div>
 
                                             {/* ID Section - Single line format */}
-                                            <p className="text-sm mb-1"><span className="text-black text-bold"></span> <span>{application.id}</span></p>
+                                            <p className="text-sm mb-1" style={{ maxWidth: '5.5cm' }}>
+                                                <span>{application.id}</span>
+                                            </p>
 
                                             {/* Personal Info - Single line format */}
                                             <div className="space-y-1 mb-3 info-section text-xs">
-                                                <p><span className="text-gray-500">Last Name</span></p>
-                                                <p><span className="text-sm">{application.familyName}</span></p>
-                                                <p><span className="text-gray-500">First Name:</span></p>
-                                                <p><span className="text-sm">{application.name}</span></p>
-                                                <p><span className="text-gray-500">Birth Date</span>: <span className="text-sm">{application.birthDate}</span></p>
-                                                <p><span className="text-gray-500">Birth Place</span>: <span className="text-sm">{application.birthPlace}</span></p>
-                                                <p><span className="text-gray-500">Adderss</span></p>
-                                                <p><span className="text-sm">{application.addressLine1}</span></p>
-                                                <p><span className="text-gray-500">Permit Class</span>: <span className="text-sm">{application.licenseClass.join(",")}</span></p>
-                                                <p><span className="text-gray-500">Original ID</span></p>
-                                                <p style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-sm">{application.licenseNumber}</span></p>
-                                                <p style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-gray-500">Issue Date</span> <span className="text-sm">{application.issueDate ? new Date((application.issueDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
-                                                <p style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-gray-500">Expiry Date</span> <span className="text-sm">{application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000).toISOString().split('T')[0] : 'N/A'}</span></p>
+                                                <p className="m-0"><span className="text-red-700">Last Name</span></p>
+                                                <p className="m-0"><span className="text-sm inline-block" style={{ maxWidth: '5.5cm' }}>{application.familyName}</span></p>
+                                                <p className="m-0"><span className="text-red-700">First Name:</span></p>
+                                                <p className="m-0"><span className="text-sm">{application.name}</span></p>
+                                                <p className="m-0"><span className="text-red-700">Birth Date</span>: <span className="text-sm">{application.birthDate}</span></p>
+                                                <p className="m-0"><span className="text-red-700">Birth Place</span>: <span className="text-sm">{application.birthPlace}</span></p>
+                                                <p className="m-0">
+                                                    <span className="text-red-700">Address:</span>
+                                                    <span className="ml-1 text-sm">{application.country}</span>
+                                                </p>
+                                                <p className="m-0"><span className="text-sm">{application.addressLine1}</span></p>
+                                                <p className="m-0"><span className="text-green-700">Permit Class</span>: <span className="text-sm">{application.licenseClass.join(",")}</span></p>
+                                                <p className="m-0"><span className="text-red-700">Original ID</span></p>
+                                                <p className="m-0" style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-sm">{application.licenseNumber}</span></p>
+                                                <p className="m-0" style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-green-700">Issue Date</span> <span className="text-sm">{application.issueDate ? formatDate(new Date((application.issueDate as any).seconds * 1000)) : 'N/A'}</span></p>
+                                                <p className="m-0" style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-red-700">Expiry Date</span> <span className="text-sm">{application.expiryDate ? formatDate(new Date((application.expiryDate as any).seconds * 1000)) : 'N/A'}</span></p>
                                             </div>
                                         </div>
 

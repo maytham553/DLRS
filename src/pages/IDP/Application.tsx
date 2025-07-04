@@ -271,7 +271,8 @@ export const IDPApplication = () => {
         setIsSubmitting(true);
         setError(null);
 
-        data.id = userProfile.code + "-" + idpId; // Use user code as prefix for IDP ID
+        data.id = userProfile.code + "-" + idpId;
+        data.userId = userId;
 
         try {
             // Prepare data with photo URLs for Firestore

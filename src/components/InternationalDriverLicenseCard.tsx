@@ -29,8 +29,8 @@ const InternationalDriverLicenseCard = ({
 
 
     // Domain for QR code
-    const qrCodeValue = "https://yourdomain.com";
-
+    const myCurrentDomain = window.location.hostname;
+    const qrCodeValue = `https://${myCurrentDomain}/verify`;
 
 
     // Download as image function
@@ -165,7 +165,7 @@ const InternationalDriverLicenseCard = ({
                                                 </div>
                                                 <div>
                                                     <span className="text-[#9a0404]">License number : </span>
-                                                    <span className="text-[#06489f] uppercase">{application.licenseNumber}</span>
+                                                    <span className="text-[#06489f] uppercase">{application.id}</span>
                                                 </div>
 
                                                 <div >

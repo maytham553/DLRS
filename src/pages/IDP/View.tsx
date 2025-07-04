@@ -15,7 +15,7 @@ const getStatusDisplay = (application: IDPFormData): { text: string; className: 
             className: 'bg-red-100 text-red-700'
         };
     }
-    
+
     // Check if the application has expired
     if (application.expiryDate) {
         const expiryDate = new Date(application.expiryDate.seconds * 1000);
@@ -26,7 +26,7 @@ const getStatusDisplay = (application: IDPFormData): { text: string; className: 
             };
         }
     }
-    
+
     // Default to active
     return {
         text: 'ACTIVE',
@@ -131,20 +131,16 @@ export const IDPView = () => {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">IDP Application Details</h1>
                 <div className="space-x-2">
-                    {application && (
-                        <>
-                            <PrintIDPCard
-                                application={application}
-                                issueDate={application.issueDate ? new Date((application.issueDate as any).seconds * 1000) : null}
-                                expiryDate={application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000) : null}
-                            />
-                            <InternationalDriverLicenseCard
-                                application={application}
-                                issueDate={application.issueDate ? new Date((application.issueDate as any).seconds * 1000) : null}
-                                expiryDate={application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000) : null}
-                            />
-                        </>
-                    )}
+                    <PrintIDPCard
+                        application={application}
+                        issueDate={application.issueDate ? new Date((application.issueDate as any).seconds * 1000) : null}
+                        expiryDate={application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000) : null}
+                    />
+                    <InternationalDriverLicenseCard
+                        application={application}
+                        issueDate={application.issueDate ? new Date((application.issueDate as any).seconds * 1000) : null}
+                        expiryDate={application.expiryDate ? new Date((application.expiryDate as any).seconds * 1000) : null}
+                    />
                     <Link
                         to={`/idp/edit/${id}`}
                         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -163,8 +159,8 @@ export const IDPView = () => {
             <div className="bg-white shadow-md rounded-lg overflow-hidden mb-6">
                 {/* Status indicator */}
                 <div className={`h-1.5 w-full ${application.isCanceled ? 'bg-red-500' :
-                        hasExpired ? 'bg-orange-500' :
-                            'bg-green-500'
+                    hasExpired ? 'bg-orange-500' :
+                        'bg-green-500'
                     }`}></div>
 
                 <div className="p-6">
@@ -212,8 +208,8 @@ export const IDPView = () => {
                         <div>
                             <p className="text-sm text-gray-500">License Class</p>
                             <p className="font-medium">
-                                {Array.isArray(application.licenseClass) 
-                                    ? application.licenseClass.join(", ") 
+                                {Array.isArray(application.licenseClass)
+                                    ? application.licenseClass.join(", ")
                                     : application.licenseClass}
                             </p>
                         </div>
@@ -286,8 +282,8 @@ export const IDPView = () => {
                         <div>
                             <p className="text-sm text-gray-500">Status</p>
                             <p className={`font-medium ${application.isCanceled ? 'text-red-600' :
-                                    hasExpired ? 'text-orange-600' :
-                                        'text-green-600'
+                                hasExpired ? 'text-orange-600' :
+                                    'text-green-600'
                                 }`}>
                                 {statusInfo.text}
                                 {hasExpired && !application.isCanceled &&

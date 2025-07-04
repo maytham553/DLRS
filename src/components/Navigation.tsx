@@ -49,12 +49,19 @@ export default function Navigation() {
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/80 backdrop-blur shadow-sm" : "bg-transparent"
             }`}>
+            {/* Contact Header */}
+            <div className="bg-slate-50 dark:bg-slate-800 py-2 px-4 text-sm">
+                <div className="container mx-auto flex justify-between items-center text-slate-600 dark:text-slate-400">
+                    <span>📧 info@iaaidg.com</span>
+                    <span>📞 +1 (555) 123-4567</span>
+                </div>
+            </div>
             <div className="container mx-auto px-4 py-3">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-2">
                         <div className="rounded-lg flex items-center justify-center">
-                            <img src="./logo.png" className="w-24" />
+                            <img src="/logo_gold.png" className="w-24" />
                         </div>
                     </Link>
 

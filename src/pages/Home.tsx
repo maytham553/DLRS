@@ -141,7 +141,7 @@ export default function Home() {
                             <div className="mb-6">
                                 <div className="overflow-hidden rounded-xl">
                                     <img
-                                        src="https://automobiledrivingclub.org.uk/wp-content/uploads/2022/04/istockphoto-1307382585-612x612-1.jpg"
+                                        src="/home_image_2.jpeg"
                                         alt="International Driving"
                                         className="w-full h-auto object-cover"
                                         loading="lazy"
@@ -233,15 +233,15 @@ export default function Home() {
 
             {/* Pricing Section */}
             <div id="pricing" className="w-full my-20 py-16 bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-900 dark:to-slate-800 rounded-xl">
-                <div className="container mx-auto">
+                <div>
                     <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your Plan</h2>
-                        <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+                        <p className="text-lg text-foreground/70">
                             Select the IDP duration that best fits your travel needs. Both options provide comprehensive coverage for international driving.
                         </p>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-8 max-w-4xl mx-auto">
+                    <div className="flex flex-col md:flex-row gap-8 p-4">
                         {/* 1 Year Plan */}
                         <div className="w-full md:w-1/2 bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px]">
                             <div className="p-6 bg-primary/10 border-b border-border">
@@ -298,6 +298,90 @@ export default function Home() {
                                     <li className="flex items-start">
                                         <span className="mr-2 text-primary">✓</span>
                                         <span>Digital Document in Under 24 Hours</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>IDP Translated to 26 Languages</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* 5 Year Plan */}
+                        <div className="w-full md:w-1/2 bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border-2 border-primary/70 relative transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px]">
+                            <div className="absolute top-0 right-0 bg-primary/80 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                                PREMIUM
+                            </div>
+                            <div className="p-6 bg-primary/30 border-b border-border">
+                                <h3 className="text-2xl font-bold text-center">5 Year Plan</h3>
+                            </div>
+                            <div className="p-8">
+                                <ul className="space-y-4">
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Printed Brochure</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Printed ID</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Digital Document</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>100% Money Back Guarantee</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Express International Delivery</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Digital Document in Less Than 24 Hours</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>IDP Translated to 26 Languages</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* 10 Year Plan */}
+                        <div className="w-full md:w-1/2 bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border-2 border-primary/60 relative transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px]">
+                            <div className="absolute top-0 right-0 bg-primary/60 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                                ULTIMATE
+                            </div>
+                            <div className="p-6 bg-primary/40 border-b border-border">
+                                <h3 className="text-2xl font-bold text-center">10 Year Plan</h3>
+                            </div>
+                            <div className="p-8">
+                                <ul className="space-y-4">
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Printed Brochure</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Printed ID</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Digital Document</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>100% Money Back Guarantee</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Express International Delivery</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-primary">✓</span>
+                                        <span>Digital Document in Less Than 24 Hours</span>
                                     </li>
                                     <li className="flex items-start">
                                         <span className="mr-2 text-primary">✓</span>

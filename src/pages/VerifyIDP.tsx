@@ -72,6 +72,11 @@ export default function VerifyIDP() {
                 // Get the first matching document
                 const doc = querySnapshot.docs[0];
                 const data = doc.data() as ExtendedIDPFormData;
+                if (data && data.isCanceled) {
+                    setError("IDP not found.");
+                    return;
+                }
+
                 setIdpData(data);
 
                 // Check if the IDP has expired
@@ -219,6 +224,10 @@ export default function VerifyIDP() {
 
                                 {/* Personal Details */}
                                 <div className="w-2/3 print-details">
+                                    <div className="flex print-field mb-4">
+                                        <span className="text-lg font-medium flex-1 print-value">{idpData.id}</span>
+                                    </div>
+
                                     <div className="mb-5 print-section">
 
                                         <div className="space-y-3 pl-4 print-fields">
@@ -261,7 +270,7 @@ export default function VerifyIDP() {
                                                 <span className="text-sm w-32 text-gray-500 print-label">Valid For</span>
                                             </div>
                                             <div className="flex print-field">
-                                                <span className="text-sm font-medium flex-1 print-value">{idpData.duration}</span>
+                                                <span className="text-sm font-medium flex-1 print-value">{idpData.duration.split("-")[0]}</span>
                                             </div>
 
                                             <div className="flex print-field">
