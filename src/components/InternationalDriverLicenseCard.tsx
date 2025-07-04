@@ -40,11 +40,12 @@ const InternationalDriverLicenseCard = ({
         try {
             setExportingImage(true);
 
-            // Using html2canvas with higher resolution for better quality
+            // Using html2canvas with 2x scale for higher resolution
             const canvas = await html2canvas(idCardRef.current, {
                 allowTaint: true,
                 useCORS: true,
-                logging: true
+                logging: true,
+                scale: 3 // Scale the image by 2x for better quality
             });
 
             // Get image data URL
