@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "m360-1fcf5"
-  }
+    "default": "m360-1fcf5",
+    "prod": "iaaidg"
+  },
+  "targets": {},
+  "etags": {}
 }

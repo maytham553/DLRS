@@ -17,7 +17,7 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
 
     // Domain for QR code
     const myCurrentDomain = window.location.hostname;
-    const qrCodeValue = `https://${myCurrentDomain}/verify`;
+    const qrCodeValue = `https://${myCurrentDomain}/verify-idp`;
 
     // Print card handler function
     const handlePrint = () => {
