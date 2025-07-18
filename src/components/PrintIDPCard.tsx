@@ -247,7 +247,7 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                                 size={40}
                                                 level="L"
                                                 bgColor="#FFFFFF"
-                                                fgColor="#000000"
+                                                fgColor="blue"
                                                 style={{ width: '2cm', height: '2cm' }}
                                             />
                                         </div>
@@ -268,28 +268,28 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                             {/* Barcode Section */}
 
                                             {/* ID Section - Single line format */}
-                                            <p className="text-sm mb-1" style={{ maxWidth: '5.5cm' }}>
+                                            <p className="text-sm mb-1" style={{ maxWidth: '5.5cm', color: 'blue' }}>
                                                 <span>{application.id}</span>
                                             </p>
 
                                             {/* Personal Info - Single line format */}
                                             <div className="space-y-1 mb-3 info-section text-xs">
-                                                <p className="m-0"><span className="text-red-700">Last Name</span></p>
-                                                <p className="m-0"><span className="text-sm inline-block" style={{ maxWidth: '5.5cm' }}>{application.familyName}</span></p>
-                                                <p className="m-0"><span className="text-red-700">First Name:</span></p>
-                                                <p className="m-0"><span className="text-sm">{application.name}</span></p>
-                                                <p className="m-0"><span className="text-red-700">Birth Date</span>: <span className="text-sm">{application.birthDate}</span></p>
-                                                <p className="m-0"><span className="text-red-700">Birth Place</span>: <span className="text-sm">{application.birthPlace}</span></p>
-                                                <p className="m-0">
+                                                <p style={{ margin: 0 }}><span className="text-red-700">Last Name</span></p>
+                                                <p style={{ margin: 0 }}><span className="text-sm inline-block" style={{ maxWidth: '5.5cm' }}>{application.familyName}</span></p>
+                                                <p style={{ margin: 0 }}><span className="text-red-700">First Name:</span></p>
+                                                <p style={{ margin: 0 }}><span className="text-sm">{application.name}</span></p>
+                                                <p style={{ margin: 0 }}><span className="text-red-700">Birth Date</span>: <span className="text-sm">{application.birthDate}</span></p>
+                                                <p style={{ margin: 0 }}><span className="text-red-700">Birth Place</span>: <span className="text-sm">{application.birthPlace}</span></p>
+                                                <p style={{ margin: 0 }}>
                                                     <span className="text-red-700">Address:</span>
                                                     <span className="ml-1 text-sm">{application.country}</span>
                                                 </p>
-                                                <p className="m-0"><span className="text-sm">{application.addressLine1}</span></p>
-                                                <p className="m-0"><span className="text-green-700">Permit Class</span>: <span className="text-sm">{application.licenseClass.join(",")}</span></p>
-                                                <p className="m-0"><span className="text-red-700">Original ID</span></p>
-                                                <p className="m-0" style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-sm">{application.licenseNumber}</span></p>
-                                                <p className="m-0" style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-green-700">Issue Date</span> <span className="text-sm">{application.issueDate ? formatDate(new Date((application.issueDate as any).seconds * 1000)) : 'N/A'}</span></p>
-                                                <p className="m-0" style={{ maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-red-700">Expiry Date</span> <span className="text-sm">{application.expiryDate ? formatDate(new Date((application.expiryDate as any).seconds * 1000)) : 'N/A'}</span></p>
+                                                <p style={{ margin: 0 }}><span className="text-sm">{application.addressLine1}</span></p>
+                                                <p style={{ margin: 0 }}><span className="text-green-700">Permit Class</span>: <span className="text-sm">{application.licenseClass.join(",")}</span></p>
+                                                <p style={{ margin: 0 }}><span className="text-red-700">Original ID</span></p>
+                                                <p style={{ margin: 0, maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-sm">{application.licenseNumber}</span></p>
+                                                <p style={{ margin: 0, maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-green-700">Issue Date</span> <span className="text-sm">{application.issueDate ? formatDate(new Date((application.issueDate as any).seconds * 1000)) : 'N/A'}</span></p>
+                                                <p style={{ margin: 0, maxWidth: '4.5cm', overflow: 'hidden' }}><span className="text-red-700">Expiry Date</span> <span className="text-sm">{application.expiryDate ? formatDate(new Date((application.expiryDate as any).seconds * 1000)) : 'N/A'}</span></p>
                                             </div>
                                         </div>
 

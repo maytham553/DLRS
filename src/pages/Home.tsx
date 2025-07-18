@@ -155,7 +155,7 @@ export default function Home() {
                                         <i className="far fa-snowflake"></i>
                                     </div>
                                     <p className="text-foreground/70">
-                                        Valid for 1-3 years with fast worldwide shipping options
+                                        Valid for 1-10 years with fast worldwide shipping options
                                     </p>
                                 </div>
                                 <div className="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
@@ -183,14 +183,6 @@ export default function Home() {
                                 The International Driving Permit <strong>(IDP)</strong> is an official document that helps you drive overseas using your existing valid driver's license.
                                 It's commonly required by car rental agencies and frequently requested by traffic authorities when you present your foreign driver's license.
                             </p>
-                            <div className="flex justify-center mt-8">
-                                <Link to="/public-idp-application">
-                                    <Button className="h-12 px-8">
-                                        <span className="mr-2">Learn More</span>
-                                        <span>→</span>
-                                    </Button>
-                                </Link>
-                            </div>
                         </div>
 
                         {/* How It Works Column */}
@@ -201,14 +193,6 @@ export default function Home() {
                                 It's designed to be universally understood, bridging language barriers and ensuring your driving credentials
                                 are recognized in over 150 countries worldwide.
                             </p>
-                            <div className="flex justify-center mt-8">
-                                <Link to="/verify-idp">
-                                    <Button className="h-12 px-8">
-                                        <span className="mr-2">Learn More</span>
-                                        <span>→</span>
-                                    </Button>
-                                </Link>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -392,6 +376,11 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="flex justify-center items-center">
+                <iframe style={{ width: '800px', height: '575px' }}
+                    src="https://online.flipbuilder.com/nubc/smkz/index.html" seamless scrolling="no" frameBorder="0" allowTransparency></iframe>
             </div>
 
 
