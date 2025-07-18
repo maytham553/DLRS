@@ -240,6 +240,21 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                         width: '8cm',
                                         height: '11cm'
                                     }}>
+                                        {/* Watermark */}
+                                        <div style={{
+                                            position: 'absolute',
+                                            width: '100%',
+                                            height: '100%',
+                                            background: 'url(/idp_bg.jpg)',
+                                            opacity: 0.7,
+                                            pointerEvents: 'none',
+                                            backgroundPosition: 'center',
+                                            backgroundSize: 'cover',
+                                            zIndex: 0
+                                        }}>
+
+                                        </div>
+
                                         <div style={{ width: '2cm', height: '2cm', position: 'absolute', right: 4, top: 4 }}
                                             className="bg-white p-1 rounded border border-gray-300 flex justify-center items-center">
                                             <QRCode
@@ -264,7 +279,7 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                                         </div>
 
                                         {/* Card Body */}
-                                        <div className="pl-2 py-2 pr-1 card-body">
+                                        <div className="pl-2 py-2 pr-1 card-body relative">
                                             {/* Barcode Section */}
 
                                             {/* ID Section - Single line format */}
@@ -317,7 +332,7 @@ const PrintIDPCard = ({ application }: PrintIDPCardProps) => {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div >
             )}
         </>
     );
