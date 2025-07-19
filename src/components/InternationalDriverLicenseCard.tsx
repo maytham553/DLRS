@@ -139,6 +139,7 @@ const InternationalDriverLicenseCard = ({
                             <div className="border border-gray-300 overflow-scroll p-4 rounded-lg bg-gray-50 flex justify-center">
                                 <div
                                     className="w-full max-w-md min-w-md overflow-hidden"
+                                    style={{ maxWidth: '30rem' }}
                                     ref={idCardRef}
                                 >
                                     {/* Card container with empty card background */}
@@ -150,7 +151,7 @@ const InternationalDriverLicenseCard = ({
                                     >
                                         {/* Empty card background image */}
                                         <img
-                                            src="/empty-card.png"
+                                            src="/card_bg.png"
                                             alt="International Driver's License Template"
                                             className="absolute top-0 left-0 w-full h-full object-cover"
                                         />
@@ -160,7 +161,7 @@ const InternationalDriverLicenseCard = ({
                                             className="absolute top-0 left-0 w-full h-full ">
                                             {/* Main content area (positioned to match the empty card) */}
                                             <div
-                                                className="absolute top-[37%] left-[28%] right-[4%]  font-bold text-xs flex flex-col gap-[3px]">
+                                                className="absolute top-[38%] left-[28%] right-[4%]  font-bold text-xs flex flex-col gap-[3px]">
                                                 <div className="text-[#011843]" >
                                                     INTERNATIONAL DRIVING PERMIT
                                                 </div>
@@ -235,7 +236,7 @@ const InternationalDriverLicenseCard = ({
                                             <div
                                                 style={{
                                                     position: 'absolute',
-                                                    bottom: '2%',
+                                                    bottom: '4%',
                                                     right: '20%',
                                                     width: '50px',
                                                     height: '50px',
@@ -275,7 +276,7 @@ const InternationalDriverLicenseCard = ({
                                             <div
                                                 style={{
                                                     position: 'absolute',
-                                                    bottom: '2%',
+                                                    bottom: '4%',
                                                     right: '2%',
                                                     textAlign: 'left',
                                                     zIndex: 3
